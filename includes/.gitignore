@@ -1,0 +1,5 @@
+.env
+*.sql
+config/
+Thumbs.db
+.DS_Store
