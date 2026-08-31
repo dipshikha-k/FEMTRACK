@@ -563,8 +563,8 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
             background:
                 linear-gradient(
                     100deg,
-                    #a94ee7,
-                    #e63f93
+                   #f8b5d2,
+                    #e75b9b
                 );
 
             box-shadow:

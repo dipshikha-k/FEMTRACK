@@ -212,6 +212,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     Reports
                 </a>
 
+                <a href="../about.php">
+                    About Us
+                </a>
+
                 <a
                     class="logout"
                     href="../logout.php"
