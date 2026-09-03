@@ -1,103 +1,284 @@
-<?php
-session_start();
-require_once __DIR__ . '/../config/database.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../login.php');
+<?php
+
+session_start();
+
+require_once __DIR__ . "/../config/database.php";
+
+
+/*
+|--------------------------------------------------------------------------
+| LOGIN CHECK
+|--------------------------------------------------------------------------
+*/
+
+if (!isset($_SESSION["user_id"])) {
+    header("Location: ../login.php");
     exit;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Create symptom_logs table if it does not exist
-|--------------------------------------------------------------------------
-*/
+$user_id = $_SESSION["user_id"];
 
-mysqli_query($conn, "CREATE TABLE IF NOT EXISTS symptom_logs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    symptom_date DATE NOT NULL,
-    symptoms VARCHAR(255) NOT NULL,
-    severity VARCHAR(20) NOT NULL,
-    notes TEXT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)");
+$message = "";
+$message_type = "";
+$femtrackMessage = "";
+
 
 /*
 |--------------------------------------------------------------------------
-| Save symptom entry
+| CREATE SYMPTOM TABLE
 |--------------------------------------------------------------------------
 */
 
-$message = '';
-$messageType = '';
+mysqli_query($conn, "
+    CREATE TABLE IF NOT EXISTS symptom_logs (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        symptom_date DATE NOT NULL,
+        symptoms VARCHAR(255) NOT NULL,
+        severity VARCHAR(50) NOT NULL,
+        mood VARCHAR(50) DEFAULT NULL,
+        mood_swings VARCHAR(50) DEFAULT NULL,
+        cravings VARCHAR(100) DEFAULT NULL,
+        bloating VARCHAR(50) DEFAULT NULL,
+        sleep VARCHAR(50) DEFAULT NULL,
+        energy VARCHAR(50) DEFAULT NULL,
+        pain VARCHAR(100) DEFAULT NULL,
+        skin VARCHAR(100) DEFAULT NULL,
+        medication VARCHAR(255) DEFAULT NULL,
+        notes TEXT DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+");
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $symptomDate = $_POST['symptom_date'] ?? '';
-    $symptoms = trim($_POST['symptoms'] ?? '');
-    $severity = $_POST['severity'] ?? '';
-    $notes = trim($_POST['notes'] ?? '');
+/*
+|--------------------------------------------------------------------------
+| ADD MISSING COLUMNS
+|--------------------------------------------------------------------------
+*/
 
-    if (
-        $symptomDate === '' ||
-        $symptoms === '' ||
-        !in_array($severity, ['Mild', 'Moderate', 'Severe'], true)
-    ) {
+$columns = [
+    "mood" => "VARCHAR(50) DEFAULT NULL",
+    "mood_swings" => "VARCHAR(50) DEFAULT NULL",
+    "cravings" => "VARCHAR(100) DEFAULT NULL",
+    "bloating" => "VARCHAR(50) DEFAULT NULL",
+    "sleep" => "VARCHAR(50) DEFAULT NULL",
+    "energy" => "VARCHAR(50) DEFAULT NULL",
+    "pain" => "VARCHAR(100) DEFAULT NULL",
+    "skin" => "VARCHAR(100) DEFAULT NULL",
+    "medication" => "VARCHAR(255) DEFAULT NULL",
+    "notes" => "TEXT DEFAULT NULL"
+];
 
-        $message = 'Please complete the date, symptoms, and severity fields.';
-        $messageType = 'error';
+foreach ($columns as $column => $definition) {
+
+    $check = mysqli_query(
+        $conn,
+        "SHOW COLUMNS FROM symptom_logs LIKE '$column'"
+    );
+
+    if ($check && mysqli_num_rows($check) === 0) {
+
+        mysqli_query(
+            $conn,
+            "ALTER TABLE symptom_logs ADD COLUMN $column $definition"
+        );
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SAVE CHECK-IN
+|--------------------------------------------------------------------------
+*/
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $symptom_date = $_POST["symptom_date"] ?? "";
+    $symptoms = trim($_POST["symptoms"] ?? "");
+    $severity = $_POST["severity"] ?? "";
+
+    $mood = $_POST["mood"] ?? "";
+    $mood_swings = $_POST["mood_swings"] ?? "";
+    $cravings = $_POST["cravings"] ?? "";
+    $bloating = $_POST["bloating"] ?? "";
+    $sleep = $_POST["sleep"] ?? "";
+    $energy = $_POST["energy"] ?? "";
+    $pain = $_POST["pain"] ?? "";
+    $skin = $_POST["skin"] ?? "";
+    $medication = trim($_POST["medication"] ?? "");
+    $notes = trim($_POST["notes"] ?? "");
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDATION
+    |--------------------------------------------------------------------------
+    */
+
+    if ($symptom_date === "") {
+
+        $message = "Please select a date.";
+        $message_type = "error";
+
+    } elseif ($symptoms === "") {
+
+        $message = "Please tell us what you're experiencing.";
+        $message_type = "error";
+
+    } elseif (!in_array($severity, ["Mild", "Moderate", "Severe"])) {
+
+        $message = "Please select a valid severity level.";
+        $message_type = "error";
 
     } else {
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | INSERT
+        |--------------------------------------------------------------------------
+        */
+
         $stmt = mysqli_prepare(
             $conn,
-            'INSERT INTO symptom_logs
-            (user_id, symptom_date, symptoms, severity, notes)
-            VALUES (?, ?, ?, ?, ?)'
+            "INSERT INTO symptom_logs
+            (
+                user_id,
+                symptom_date,
+                symptoms,
+                severity,
+                mood,
+                mood_swings,
+                cravings,
+                bloating,
+                sleep,
+                energy,
+                pain,
+                skin,
+                medication,
+                notes
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
+
 
         mysqli_stmt_bind_param(
             $stmt,
-            'issss',
-            $_SESSION['user_id'],
-            $symptomDate,
+            "isssssssssssss",
+            $user_id,
+            $symptom_date,
             $symptoms,
             $severity,
+            $mood,
+            $mood_swings,
+            $cravings,
+            $bloating,
+            $sleep,
+            $energy,
+            $pain,
+            $skin,
+            $medication,
             $notes
         );
 
+
         if (mysqli_stmt_execute($stmt)) {
-            $message = 'Your symptom entry has been saved successfully.';
-            $messageType = 'success';
+
+            $message = "Check-in saved successfully.";
+            $message_type = "success";
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | FEMTRACK DRAMATIC MESSAGE
+            |--------------------------------------------------------------------------
+            */
+
+            if ($cravings === "Chocolate" && $energy === "Very Low") {
+
+                $femtrackMessage =
+                    "Girl, chocolate AND zero energy? You need a vacation, not another responsibility.";
+
+            } elseif (
+                $energy === "High" &&
+                $mood_swings === "Severe"
+            ) {
+
+                $femtrackMessage =
+                    "Energy level: unstoppable. Mood swings: equally unstoppable. Go irritate someone else too.";
+
+            } elseif (
+                $mood === "Irritated" &&
+                $mood_swings === "Severe"
+            ) {
+
+                $femtrackMessage =
+                    "Okay girl, everybody back away slowly. You are officially in your don't-test-me era.";
+
+            } elseif (
+                $mood === "Sad" &&
+                $energy === "Very Low"
+            ) {
+
+                $femtrackMessage =
+                    "Low mood, low energy. Cancel unnecessary plans and romanticize doing absolutely nothing.";
+
+            } elseif ($cravings === "Chocolate") {
+
+                $femtrackMessage =
+                    "Chocolate craving detected. Honestly, your body has submitted a very specific request.";
+
+            } elseif ($cravings === "Spicy") {
+
+                $femtrackMessage =
+                    "Spicy cravings? Apparently your period wanted drama AND seasoning.";
+
+            } elseif (
+                $sleep === "Poor" &&
+                $energy === "Low"
+            ) {
+
+                $femtrackMessage =
+                    "You slept badly and now you're tired. Shocking. Your body has filed a formal complaint.";
+
+            } elseif (
+                $mood === "Happy" &&
+                $energy === "High"
+            ) {
+
+                $femtrackMessage =
+                    "Happy and full of energy? Look at you being suspiciously productive.";
+
+            } elseif ($mood === "Calm") {
+
+                $femtrackMessage =
+                    "Calm day detected. Protect this peace like it owes you money.";
+
+            } elseif ($severity === "Severe") {
+
+                $femtrackMessage =
+                    "Okay, your body is clearly being dramatic today. Be extra gentle with yourself.";
+
+            } else {
+
+                $femtrackMessage =
+                    "Another day, another plot twist from your body. At least now we have receipts.";
+            }
+
         } else {
-            $message = 'Unable to save the entry. Please try again.';
-            $messageType = 'error';
+
+            $message = "Something went wrong while saving your check-in.";
+            $message_type = "error";
         }
+
 
         mysqli_stmt_close($stmt);
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Get recent symptoms
-|--------------------------------------------------------------------------
-*/
-
-$stmt = mysqli_prepare(
-    $conn,
-    'SELECT symptom_date, symptoms, severity, notes
-     FROM symptom_logs
-     WHERE user_id = ?
-     ORDER BY symptom_date DESC, id DESC
-     LIMIT 5'
-);
-
-mysqli_stmt_bind_param($stmt, 'i', $_SESSION['user_id']);
-mysqli_stmt_execute($stmt);
-
-$recentSymptoms = mysqli_stmt_get_result($stmt);
 ?>
 
 <!DOCTYPE html>
@@ -107,362 +288,272 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Track Symptoms - FemTrack</title>
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
-          rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
 
 
     <style>
 
+        /* =========================================================
+           BASE
+        ========================================================= */
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'DM Sans', sans-serif;
-            color: #42152f;
-            background:
-                radial-gradient(
-                    circle at 85% 15%,
-                    rgba(247, 164, 202, 0.30),
-                    transparent 28%
-                ),
-                linear-gradient(
-                    135deg,
-                    #fff9fc 0%,
-                    #fff1f7 48%,
-                    #fce6f1 100%
-                );
-
-            min-height: 100vh;
+            margin: 0;
+            background: #fff7fb;
+            color: #54243d;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
 
         /* =========================================================
-           NAVBAR
+           NAVBAR — SAME VIBE AS DASHBOARD
         ========================================================= */
 
         .topbar {
             width: 100%;
-            height: 80px;
+            background: white;
 
-            background: rgba(255, 255, 255, 0.92);
+            padding: 18px 6%;
 
-            border-bottom: 1px solid #f3d9e5;
+            border-bottom: 1px solid #f5dce9;
+
+            box-shadow:
+                0 4px 20px rgba(180, 80, 130, 0.08);
 
             display: flex;
-            align-items: center;
             justify-content: space-between;
-
-            padding: 0 7%;
-
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            backdrop-filter: blur(15px);
+            align-items: center;
         }
 
 
         .logo {
             display: flex;
             align-items: center;
+            gap: 9px;
 
             text-decoration: none;
 
-            color: #42152f;
+            color: #8f3d68;
 
-            font-size: 22px;
+            font-size: 27px;
             font-weight: 800;
-
-            gap: 9px;
         }
 
 
         .logo span {
-            color: #df3d83;
+            color: #e78ab5;
         }
 
 
         .logo-mark {
-            width: 43px;
-            height: 43px;
+            width: 34px;
+            height: 34px;
 
             border-radius: 50%;
 
             object-fit: cover;
-
-            box-shadow:
-                0 5px 15px rgba(220, 52, 126, 0.18);
         }
 
 
         .nav {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
         }
 
 
         .nav a {
             text-decoration: none;
 
-            color: #57243f;
+            color: #71445a;
 
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
 
-            padding: 10px 15px;
+            padding: 10px 14px;
 
-            border-radius: 30px;
+            border-radius: 20px;
 
-            transition: 0.25s ease;
+            transition: .25s;
         }
 
 
         .nav a:hover {
-            color: #d92f7c;
-            background: #fff0f7;
+            background: #fde2ef;
+            color: #b33f76;
         }
 
+
+        /* ACTIVE TRACK SYMPTOMS */
 
         .nav a.active {
-            color: #d72f7c;
-            background: #fff0f7;
+            background: rgba(231, 138, 181, 0.20);
+            color: #b33f76;
         }
 
 
-        .nav .logout {
+        /* LOGOUT ALWAYS DARK PINK */
+
+        .nav a.logout {
+            background: #c65384;
             color: white;
-
-            background: #48152f;
-
-            margin-left: 8px;
-
-            padding: 11px 20px;
         }
 
 
-        .nav .logout:hover {
-            background: #d92f7c;
+        .nav a.logout:hover {
+            background: #a83b6b;
             color: white;
         }
 
 
         /* =========================================================
-           MAIN
+           PAGE
         ========================================================= */
 
         .page {
-            width: 100%;
+            width: 88%;
             max-width: 1250px;
 
-            margin: 0 auto;
-
-            padding: 65px 6% 80px;
+            margin: 48px auto 75px;
         }
 
 
-        /* =========================================================
-           HERO
-        ========================================================= */
-
-        .hero {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            margin-bottom: 45px;
-        }
-
-
-        .hero-content {
-            max-width: 700px;
+        .page-heading {
+            margin-bottom: 32px;
         }
 
 
         .eyebrow {
-            color: #d6387d;
+            margin-bottom: 9px;
 
-            font-size: 12px;
+            color: #c15b89;
+
+            font-size: 13px;
             font-weight: 800;
 
-            letter-spacing: 3px;
-
-            text-transform: uppercase;
-
-            margin-bottom: 14px;
+            letter-spacing: 2px;
         }
 
 
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
+        .page-heading h1 {
+            margin: 0;
 
-            font-size: clamp(45px, 6vw, 72px);
+            color: #652746;
 
-            line-height: 0.98;
+            font-size: 40px;
+            font-weight: 800;
 
-            letter-spacing: -2px;
-
-            color: #41132f;
-
-            margin-bottom: 20px;
+            letter-spacing: -1px;
         }
 
 
-        .hero h1 em {
-            color: #d83d82;
-            font-weight: 600;
-        }
+        .page-heading p {
+            margin: 10px 0 0;
 
+            color: #8d6174;
 
-        .hero p {
-            color: #81516b;
-
-            font-size: 17px;
+            font-size: 16px;
 
             line-height: 1.7;
-
-            max-width: 580px;
-        }
-
-
-        .hero-decoration {
-            width: 110px;
-            height: 110px;
-
-            border-radius: 50%;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #f8b5d2,
-                    #e75b9b
-                );
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            box-shadow:
-                0 20px 45px rgba(207, 59, 125, 0.20);
-
-            transform: rotate(8deg);
-        }
-
-
-        .hero-decoration::before {
-            content: '♡';
-
-            color: white;
-
-            font-size: 55px;
         }
 
 
         /* =========================================================
-           GRID
+           CONTENT GRID
         ========================================================= */
 
-        .main-grid {
+        .content-grid {
             display: grid;
 
             grid-template-columns:
-                minmax(0, 1fr)
-                minmax(0, 1.15fr);
+                minmax(0, 1.55fr)
+                minmax(320px, .75fr);
 
-            gap: 28px;
+            gap: 35px;
 
             align-items: start;
         }
 
 
         /* =========================================================
-           CARD
+           FORM CARD
         ========================================================= */
 
-        .card {
-            background: rgba(255, 255, 255, 0.88);
+        .form-card {
+            background: white;
 
-            border: 1px solid rgba(238, 184, 211, 0.55);
+            border: 1px solid #f5dce8;
 
-            border-radius: 28px;
+            border-radius: 27px;
+
+            padding: 38px;
 
             box-shadow:
-                0 18px 50px rgba(91, 29, 62, 0.08);
-
-            backdrop-filter: blur(14px);
+                0 15px 35px rgba(160, 70, 110, 0.08);
         }
 
 
-        .form-card {
-            padding: 34px;
+        .form-title {
+            margin: 0 0 8px;
+
+            color: #6e2e4c;
+
+            font-size: 28px;
+            font-weight: 800;
         }
 
 
-        .card-title {
-            font-family: 'Playfair Display', serif;
+        .form-subtitle {
+            margin: 0 0 30px;
 
-            font-size: 29px;
+            color: #8d6978;
 
-            color: #42152f;
+            font-size: 15px;
 
-            margin-bottom: 7px;
-        }
-
-
-        .card-subtitle {
-            color: #93637b;
-
-            font-size: 14px;
-
-            line-height: 1.6;
-
-            margin-bottom: 28px;
+            line-height: 1.7;
         }
 
 
         /* =========================================================
-           MESSAGE
+           ALERT
         ========================================================= */
 
-        .notice {
-            border-radius: 15px;
+        .alert {
+            padding: 15px 18px;
 
-            padding: 14px 16px;
+            margin-bottom: 25px;
+
+            border-radius: 14px;
 
             font-size: 14px;
-
-            margin-bottom: 22px;
-
-            font-weight: 600;
+            font-weight: 700;
         }
 
 
-        .notice.success {
-            background: #f1fbf6;
-            color: #287354;
-            border: 1px solid #c9ecd9;
+        .alert-success {
+            background: #eefaf2;
+            color: #39734b;
+
+            border: 1px solid #cdebd5;
         }
 
 
-        .notice.error {
-            background: #fff1f3;
-            color: #b52d55;
-            border: 1px solid #f3c8d5;
+        .alert-error {
+            background: #fff0f2;
+            color: #b64c63;
+
+            border: 1px solid #f4ccd5;
         }
 
 
@@ -470,68 +561,97 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
            FORM
         ========================================================= */
 
-        .form-stack {
-            display: flex;
-            flex-direction: column;
+        .form-group {
+            margin-bottom: 23px;
+        }
+
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #513642;
+
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+
+            padding: 15px 16px;
+
+            border: 1px solid #ead4dd;
+
+            border-radius: 14px;
+
+            outline: none;
+
+            background: #fffafd;
+
+            color: #4b3440;
+
+            font-family: inherit;
+
+            font-size: 15px;
+
+            transition: .25s;
+        }
+
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #b89aa8;
+        }
+
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #df82a7;
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px rgba(223, 130, 167, .11);
+        }
+
+
+        textarea {
+            min-height: 125px;
+            resize: vertical;
+        }
+
+
+        .two-columns {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
 
             gap: 20px;
         }
 
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
+        /* =========================================================
+           SECTION TITLES
+        ========================================================= */
 
-            gap: 8px;
-        }
+        .section-title {
+            margin: 32px 0 20px;
 
+            padding-bottom: 10px;
 
-        .form-group label {
-            color: #54233e;
+            border-bottom: 1px solid #f1dce5;
 
-            font-size: 13px;
+            color: #c65384;
 
-            font-weight: 700;
-        }
+            font-size: 17px;
 
-
-        .input,
-        select {
-            width: 100%;
-
-            border: 1px solid #ecd3df;
-
-            background: #fffafd;
-
-            border-radius: 14px;
-
-            padding: 14px 16px;
-
-            color: #4b1d37;
-
-            font-family: inherit;
-
-            font-size: 14px;
-
-            outline: none;
-
-            transition: 0.25s ease;
-        }
-
-
-        .input:focus,
-        select:focus {
-            border-color: #e25b98;
-
-            box-shadow:
-                0 0 0 4px rgba(226, 91, 152, 0.10);
-
-            background: white;
-        }
-
-
-        .input::placeholder {
-            color: #b999a9;
+            font-weight: 800;
         }
 
 
@@ -539,300 +659,327 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
            BUTTON
         ========================================================= */
 
-        .button {
+        .submit-btn {
             width: 100%;
+
+            margin-top: 8px;
+
+            padding: 17px 20px;
 
             border: none;
 
             border-radius: 15px;
 
-            padding: 15px 22px;
-
-            margin-top: 5px;
+            background: #c65384;
 
             color: white;
 
             font-family: inherit;
 
-            font-size: 14px;
+            font-size: 16px;
 
             font-weight: 800;
 
             cursor: pointer;
 
-            background:
-                linear-gradient(
-                    100deg,
-                   #f8b5d2,
-                    #e75b9b
-                );
-
             box-shadow:
-                0 12px 25px rgba(207, 59, 139, 0.22);
+                0 9px 20px rgba(198, 83, 132, .20);
 
-            transition: 0.25s ease;
+            transition: .25s;
         }
 
 
-        .button:hover {
+        .submit-btn:hover {
+            background: #a83b6b;
+
             transform: translateY(-2px);
 
             box-shadow:
-                0 16px 30px rgba(207, 59, 139, 0.30);
+                0 13px 25px rgba(198, 83, 132, .25);
         }
 
 
         /* =========================================================
-           RECENT ENTRIES
+           SIDE COLUMN
         ========================================================= */
 
-        .recent-card {
+        .side-column {
+            position: sticky;
+            top: 25px;
+        }
+
+
+        /* =========================================================
+           STICKY NOTE
+        ========================================================= */
+
+        .sticky-note {
+            position: relative;
+
+            min-height: 315px;
+
+            padding: 48px 36px 35px;
+
+            background: #fff9d9;
+
+            border-radius: 6px 6px 28px 6px;
+
+            box-shadow:
+                0 22px 38px rgba(82, 53, 20, .14),
+                0 4px 10px rgba(82, 53, 20, .06);
+
+            transform: rotate(2deg);
+
             overflow: hidden;
         }
 
 
-        .recent-header {
-            padding: 30px 32px 22px;
+        /* TAPE */
 
-            border-bottom: 1px solid #f1dfe8;
+        .sticky-note::before {
+            content: "";
 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: absolute;
+
+            top: -8px;
+            left: 50%;
+
+            width: 125px;
+            height: 32px;
+
+            transform:
+                translateX(-50%)
+                rotate(-3deg);
+
+            background:
+                rgba(255,255,255,.72);
+
+            border:
+                1px solid rgba(255,255,255,.5);
+
+            box-shadow:
+                0 2px 6px rgba(0,0,0,.05);
         }
 
 
-        .recent-header h2 {
-            font-family: 'Playfair Display', serif;
+        /* CORNER FOLD */
 
-            font-size: 29px;
+        .sticky-note::after {
+            content: "";
 
-            color: #42152f;
+            position: absolute;
+
+            right: 0;
+            bottom: 0;
+
+            width: 0;
+            height: 0;
+
+            border-top:
+                52px solid transparent;
+
+            border-right:
+                52px solid #f4e7a6;
         }
 
 
-        .recent-header span {
-            font-size: 12px;
+        .sticky-title {
+            color: #4b3518;
 
-            color: #d43a7c;
+            font-family: Georgia, serif;
 
-            background: #fff0f7;
+            font-size: 30px;
 
-            padding: 8px 12px;
+            line-height: 1.25;
 
-            border-radius: 30px;
-
-            font-weight: 700;
+            font-weight: 800;
         }
 
 
-        .entries {
-            padding: 8px 0;
+        .sticky-title::after {
+            content: "";
+
+            display: block;
+
+            width: 60px;
+            height: 3px;
+
+            margin-top: 13px;
+
+            background: #d79a3b;
+
+            border-radius: 20px;
+
+            transform: rotate(-2deg);
         }
 
 
-        .entry {
-            padding: 21px 32px;
+        /* MESSAGE ONLY AFTER SAVE */
 
-            display: grid;
+        .sticky-text {
+            margin-top: 25px;
 
-            grid-template-columns: 90px 1fr auto;
+            color: #5e4925;
 
-            gap: 18px;
+            font-size: 16px;
 
-            align-items: center;
-
-            border-bottom: 1px solid #f7e7ef;
-
-            transition: 0.2s ease;
-        }
-
-
-        .entry:last-child {
-            border-bottom: none;
-        }
-
-
-        .entry:hover {
-            background: #fff8fb;
-        }
-
-
-        .entry-date {
-            font-size: 12px;
-
-            font-weight: 700;
-
-            color: #9c7087;
-        }
-
-
-        .entry-symptoms {
-            color: #4d1d38;
-
-            font-size: 14px;
+            line-height: 1.75;
 
             font-weight: 600;
         }
 
 
-        .entry-notes {
-            color: #9b7187;
+        /* SIGNATURE ALWAYS VISIBLE */
 
-            font-size: 12px;
-
-            margin-top: 5px;
-
-            line-height: 1.4;
-        }
-
-
-        .tag {
+        .sticky-signature {
             display: inline-flex;
 
-            padding: 7px 12px;
+            align-items: center;
 
-            border-radius: 30px;
+            gap: 5px;
 
-            font-size: 11px;
+            margin-top: 29px;
 
-            font-weight: 800;
+            padding: 8px 14px;
 
-            background: #fff0f7;
+            color: #9d7938;
 
-            color: #d43b7d;
-        }
-
-
-        .empty {
-            padding: 45px 30px;
-
-            text-align: center;
-
-            color: #a2788d;
+            font-family: Georgia, serif;
 
             font-size: 14px;
+
+            font-style: italic;
+
+            background:
+                rgba(255,255,255,.48);
+
+            border:
+                1px dashed rgba(161,124,54,.35);
+
+            border-radius: 20px;
+
+            transform: rotate(-2deg);
+
+            box-shadow:
+                0 3px 8px rgba(82,53,20,.05);
+        }
+
+
+        .sticky-signature strong {
+            color: #c38b2f;
+
+            font-size: 15px;
+
+            font-style: normal;
         }
 
 
         /* =========================================================
-           FOOTER NOTE
+           PRIVACY CARD
         ========================================================= */
 
-        .privacy-note {
-            text-align: center;
+        .privacy-card {
+            margin-top: 28px;
 
-            margin-top: 35px;
+            padding: 24px;
 
-            color: #9a7186;
+            background: white;
 
-            font-size: 12px;
+            border: 1px solid #f5dce8;
+
+            border-radius: 22px;
+
+            box-shadow:
+                0 12px 30px rgba(160, 70, 110, 0.07);
         }
 
 
-        .privacy-note span {
-            color: #df3c82;
+        .privacy-card h3 {
+            margin: 0 0 9px;
+
+            color: #6e2e4c;
+
+            font-size: 17px;
+        }
+
+
+        .privacy-card p {
+            margin: 0;
+
+            color: #8d6978;
+
+            font-size: 13px;
+
+            line-height: 1.7;
         }
 
 
         /* =========================================================
-           RESPONSIVE
+           TABLET
         ========================================================= */
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
 
             .topbar {
-                padding: 0 4%;
+                padding: 18px 4%;
             }
 
-
-            .nav a {
-                padding: 8px 9px;
-
-                font-size: 12px;
-            }
-
-
-            .nav .logout {
-                padding: 9px 13px;
-            }
-
-
-            .page {
-                padding: 50px 4% 60px;
-            }
-
-
-            .main-grid {
+            .content-grid {
                 grid-template-columns: 1fr;
             }
 
-
-            .hero-decoration {
-                display: none;
+            .side-column {
+                position: static;
             }
 
         }
 
 
-        @media (max-width: 650px) {
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 700px) {
 
             .topbar {
-                height: auto;
-
-                min-height: 75px;
-
-                flex-wrap: wrap;
-
-                gap: 10px;
-
-                padding: 12px 5%;
+                flex-direction: column;
+                gap: 15px;
             }
-
 
             .nav {
-                width: 100%;
-
-                overflow-x: auto;
-
-                padding-bottom: 4px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
-
 
             .nav a {
-                white-space: nowrap;
+                padding: 8px 10px;
+                font-size: 12px;
             }
 
-
-            .hero h1 {
-                font-size: 48px;
+            .page {
+                width: 93%;
+                margin-top: 35px;
             }
 
+            .page-heading h1 {
+                font-size: 31px;
+            }
 
             .form-card {
                 padding: 25px 20px;
             }
 
-
-            .recent-header {
-                padding: 25px 20px 20px;
-            }
-
-
-            .entry {
+            .two-columns {
                 grid-template-columns: 1fr;
-
-                gap: 8px;
-
-                padding: 20px;
+                gap: 0;
             }
 
-
-            .entry .tag {
-                width: fit-content;
+            .sticky-note {
+                transform: rotate(1deg);
             }
 
         }
+
 
     </style>
 
@@ -848,12 +995,13 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
 
 <nav class="topbar">
 
-    <a href="dashboard.php" class="logo">
+
+    <a class="logo" href="dashboard.php">
 
         <img
+            class="logo-mark"
             src="../assets/femtrack-mark.jpeg"
             alt="FemTrack logo"
-            class="logo-mark"
         >
 
         Fem<span>Track</span>
@@ -863,27 +1011,42 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
 
     <div class="nav">
 
+
         <a href="../index.php">
             Home
         </a>
+
 
         <a href="dashboard.php">
             Dashboard
         </a>
 
-        <a href="track-symptoms.php" class="active">
+
+        <a
+            class="active"
+            href="track-symptoms.php"
+        >
             Track Symptoms
         </a>
+
 
         <a href="reports.php">
             Reports
         </a>
 
-        <a href="/FEMTRACK/about.php">About Us</a>
 
-        <a href="../logout.php" class="logout">
+        <a href="../about.php">
+            About Us
+        </a>
+
+
+        <a
+            class="logout"
+            href="../logout.php"
+        >
             Logout
         </a>
+
 
     </div>
 
@@ -898,71 +1061,66 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
 <main class="page">
 
 
-    <!-- HERO -->
+    <!-- PAGE HEADING -->
 
-    <section class="hero">
+    <div class="page-heading">
 
-        <div class="hero-content">
-
-            <div class="eyebrow">
-                Your daily check-in
-            </div>
-
-            <h1>
-                Listen to your
-                <em>body.</em>
-            </h1>
-
-            <p>
-                Keep track of how you feel throughout your cycle.
-                Small details today can help you understand your
-                patterns tomorrow.
-            </p>
-
+        <div class="eyebrow">
+            YOUR PERSONAL CHECK-IN
         </div>
 
+        <h1>
+            Track how you are feeling
+        </h1>
 
-        <div class="hero-decoration"></div>
+        <p>
+            Your body is allowed to have plot twists.
+            Tell FemTrack what's going on.
+        </p>
 
-    </section>
-
-
-
-    <!-- MAIN CONTENT -->
-
-    <section class="main-grid">
+    </div>
 
 
-        <!-- =====================================================
+
+    <!-- CONTENT -->
+
+    <div class="content-grid">
+
+
+        <!-- =================================================
              FORM CARD
-        ====================================================== -->
+        ================================================== -->
 
-        <div class="card form-card">
-
-            <h2 class="card-title">
-                How are you feeling?
-            </h2>
-
-            <p class="card-subtitle">
-                Take a little moment for yourself and record
-                what your body is telling you today.
-            </p>
+        <div class="form-card">
 
 
-            <?php if ($message !== ''): ?>
+            <?php if ($message !== ""): ?>
 
-                <div class="notice <?php echo $messageType; ?>">
+                <div class="alert <?php
+                    echo $message_type === "success"
+                        ? "alert-success"
+                        : "alert-error";
+                ?>">
 
-                    <?php
-                    echo htmlspecialchars($message);
-                    ?>
+                    <?php echo htmlspecialchars($message); ?>
 
                 </div>
 
             <?php endif; ?>
 
 
-            <form method="POST" class="form-stack">
+            <h2 class="form-title">
+                Today's check-in
+            </h2>
+
+
+            <p class="form-subtitle">
+                Be honest. No judgement here.
+                Your entries are saved privately with your account.
+            </p>
+
+
+            <form method="POST">
 
 
                 <!-- DATE -->
@@ -974,15 +1132,19 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
                     </label>
 
                     <input
-                        class="input"
                         type="date"
                         id="symptom_date"
                         name="symptom_date"
-                        value="<?php echo date('Y-m-d'); ?>"
+                        value="<?php
+                            echo htmlspecialchars(
+                                $_POST["symptom_date"] ?? date("Y-m-d")
+                            );
+                        ?>"
                         required
                     >
 
                 </div>
+
 
 
                 <!-- SYMPTOMS -->
@@ -990,19 +1152,24 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
                 <div class="form-group">
 
                     <label for="symptoms">
-                        What are you experiencing?
+                        What are you feeling?
                     </label>
 
                     <input
-                        class="input"
                         type="text"
                         id="symptoms"
                         name="symptoms"
-                        placeholder="e.g. cramps, headache, fatigue"
+                        placeholder="e.g. cramps, headache, tiredness"
+                        value="<?php
+                            echo htmlspecialchars(
+                                $_POST["symptoms"] ?? ""
+                            );
+                        ?>"
                         required
                     >
 
                 </div>
+
 
 
                 <!-- SEVERITY -->
@@ -1010,7 +1177,7 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
                 <div class="form-group">
 
                     <label for="severity">
-                        How intense is it?
+                        Overall severity
                     </label>
 
                     <select
@@ -1040,177 +1207,426 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
                 </div>
 
 
+
+                <!-- MOOD -->
+
+                <h3 class="section-title">
+                    Mood & energy
+                </h3>
+
+
+                <div class="two-columns">
+
+
+                    <div class="form-group">
+
+                        <label for="mood">
+                            Mood
+                        </label>
+
+                        <select id="mood" name="mood">
+
+                            <option value="">
+                                Select mood
+                            </option>
+
+                            <option value="Happy">
+                                Happy
+                            </option>
+
+                            <option value="Calm">
+                                Calm
+                            </option>
+
+                            <option value="Sad">
+                                Sad
+                            </option>
+
+                            <option value="Irritated">
+                                Irritated
+                            </option>
+
+                            <option value="Anxious">
+                                Anxious
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="mood_swings">
+                            Mood swings
+                        </label>
+
+                        <select
+                            id="mood_swings"
+                            name="mood_swings"
+                        >
+
+                            <option value="">
+                                Select level
+                            </option>
+
+                            <option value="None">
+                                None
+                            </option>
+
+                            <option value="Mild">
+                                Mild
+                            </option>
+
+                            <option value="Moderate">
+                                Moderate
+                            </option>
+
+                            <option value="Severe">
+                                Severe
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="energy">
+                        Energy level
+                    </label>
+
+                    <select
+                        id="energy"
+                        name="energy"
+                    >
+
+                        <option value="">
+                            Select energy level
+                        </option>
+
+                        <option value="High">
+                            High
+                        </option>
+
+                        <option value="Normal">
+                            Normal
+                        </option>
+
+                        <option value="Low">
+                            Low
+                        </option>
+
+                        <option value="Very Low">
+                            Very Low
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- BODY -->
+
+                <h3 class="section-title">
+                    Body check
+                </h3>
+
+
+                <div class="two-columns">
+
+
+                    <div class="form-group">
+
+                        <label for="bloating">
+                            Bloating
+                        </label>
+
+                        <select
+                            id="bloating"
+                            name="bloating"
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option value="None">
+                                None
+                            </option>
+
+                            <option value="Mild">
+                                Mild
+                            </option>
+
+                            <option value="Moderate">
+                                Moderate
+                            </option>
+
+                            <option value="Severe">
+                                Severe
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="pain">
+                            Pain
+                        </label>
+
+                        <input
+                            type="text"
+                            id="pain"
+                            name="pain"
+                            placeholder="e.g. cramps, back pain"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="two-columns">
+
+
+                    <div class="form-group">
+
+                        <label for="sleep">
+                            Sleep
+                        </label>
+
+                        <select
+                            id="sleep"
+                            name="sleep"
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option value="Good">
+                                Good
+                            </option>
+
+                            <option value="Average">
+                                Average
+                            </option>
+
+                            <option value="Poor">
+                                Poor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="skin">
+                            Skin
+                        </label>
+
+                        <input
+                            type="text"
+                            id="skin"
+                            name="skin"
+                            placeholder="e.g. acne, clear, dry"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- CRAVINGS -->
+
+                <h3 class="section-title">
+                    Cravings & care
+                </h3>
+
+
+                <div class="two-columns">
+
+
+                    <div class="form-group">
+
+                        <label for="cravings">
+                            Cravings
+                        </label>
+
+                        <select
+                            id="cravings"
+                            name="cravings"
+                        >
+
+                            <option value="">
+                                Select craving
+                            </option>
+
+                            <option value="Chocolate">
+                                Chocolate
+                            </option>
+
+                            <option value="Spicy">
+                                Spicy
+                            </option>
+
+                            <option value="Sweet">
+                                Sweet
+                            </option>
+
+                            <option value="Salty">
+                                Salty
+                            </option>
+
+                            <option value="None">
+                                None
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="medication">
+                            Medication
+                        </label>
+
+                        <input
+                            type="text"
+                            id="medication"
+                            name="medication"
+                            placeholder="Optional"
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+
                 <!-- NOTES -->
 
                 <div class="form-group">
 
                     <label for="notes">
-                        Notes <span style="font-weight:400;color:#aa8798;">
-                            (optional)
-                        </span>
+                        Anything else?
                     </label>
 
-                    <input
-                        class="input"
-                        type="text"
+                    <textarea
                         id="notes"
                         name="notes"
-                        placeholder="Anything else you'd like to remember?"
-                    >
+                        placeholder="Write anything you want FemTrack to know..."
+                    ></textarea>
 
                 </div>
+
 
 
                 <!-- BUTTON -->
 
                 <button
-                    class="button"
                     type="submit"
+                    class="submit-btn"
                 >
-                    Save my symptoms&nbsp; →
+                    Save Check-in
                 </button>
 
 
             </form>
 
+
         </div>
 
 
 
-        <!-- =====================================================
-             RECENT ENTRIES
-        ====================================================== -->
+        <!-- =================================================
+             SIDE COLUMN
+        ================================================== -->
 
-        <div class="card recent-card">
-
-
-            <div class="recent-header">
-
-                <h2>
-                    Recent entries
-                </h2>
-
-                <span>
-                    Last 5
-                </span>
-
-            </div>
+        <div class="side-column">
 
 
-            <div class="entries">
+            <!-- STICKY NOTE -->
+
+            <div class="sticky-note">
 
 
-                <?php if (mysqli_num_rows($recentSymptoms) === 0): ?>
+                <div class="sticky-title">
+                    girl... we need to talk.
+                </div>
 
 
-                    <div class="empty">
+                <?php if ($femtrackMessage !== ""): ?>
 
-                        <div style="font-size:35px;margin-bottom:10px;">
-                            ♡
-                        </div>
+                    <div class="sticky-text">
 
-                        No symptom entries yet.
-
-                        <br>
-
-                        Start your first check-in today.
+                        <?php
+                            echo htmlspecialchars($femtrackMessage);
+                        ?>
 
                     </div>
-
-
-                <?php else: ?>
-
-
-                    <?php while ($entry = mysqli_fetch_assoc($recentSymptoms)): ?>
-
-
-                        <div class="entry">
-
-
-                            <div class="entry-date">
-
-                                <?php
-                                echo date(
-                                    'M d, Y',
-                                    strtotime($entry['symptom_date'])
-                                );
-                                ?>
-
-                            </div>
-
-
-                            <div>
-
-                                <div class="entry-symptoms">
-
-                                    <?php
-                                    echo htmlspecialchars(
-                                        $entry['symptoms']
-                                    );
-                                    ?>
-
-                                </div>
-
-
-                                <?php if (!empty($entry['notes'])): ?>
-
-                                    <div class="entry-notes">
-
-                                        <?php
-                                        echo htmlspecialchars(
-                                            $entry['notes']
-                                        );
-                                        ?>
-
-                                    </div>
-
-                                <?php endif; ?>
-
-                            </div>
-
-
-                            <div>
-
-                                <span class="tag">
-
-                                    <?php
-                                    echo htmlspecialchars(
-                                        $entry['severity']
-                                    );
-                                    ?>
-
-                                </span>
-
-                            </div>
-
-
-                        </div>
-
-
-                    <?php endwhile; ?>
-
 
                 <?php endif; ?>
 
 
+                <!-- THIS IS OUTSIDE THE IF,
+                     SO IT ALWAYS SHOWS -->
+
+                <div class="sticky-signature">
+
+                    — sincerely,
+
+                    <strong>
+                        FemTrack
+                    </strong>
+
+                </div>
+
+
             </div>
+
+
+
+            <!-- PRIVACY -->
+
+            <div class="privacy-card">
+
+                <h3>
+                    Your check-in stays private.
+                </h3>
+
+                <p>
+                    Your symptom information is saved securely
+                    with your account and isn't displayed as a
+                    history list on this page.
+                </p>
+
+            </div>
+
 
         </div>
 
 
-    </section>
-
-
-
-    <!-- PRIVACY -->
-
-    <div class="privacy-note">
-
-        <span>♡</span>
-        Your FemTrack information stays private and personal.
-
     </div>
-
 
 </main>
 
@@ -1218,3 +1634,4 @@ $recentSymptoms = mysqli_stmt_get_result($stmt);
 </body>
 
 </html>
+

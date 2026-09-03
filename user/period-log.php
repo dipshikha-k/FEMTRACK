@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $stmt = mysqli_prepare(
             $conn,
-            "INSERT INTO period_logs 
+            "INSERT INTO period_logs
             (user_id, start_date, end_date, flow_intensity)
             VALUES (?, ?, ?, ?)"
         );
@@ -211,12 +211,47 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             box-shadow: 0 0 0 3px rgba(233, 120, 160, 0.12);
         }
 
+        /* Prediction */
+
+        .prediction-box {
+            display: none;
+            background: linear-gradient(
+                145deg,
+                #fff0f6,
+                #ffe4ef
+            );
+            border: 1px solid #f4cddd;
+            border-radius: 18px;
+            padding: 22px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .prediction-box h2 {
+            color: #a83f70;
+            font-size: 20px;
+            margin: 0 0 8px;
+        }
+
+        .prediction-date {
+            color: #d94f83;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .prediction-note {
+            color: #98717f;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
         /* Actions */
 
         .actions {
             display: flex;
             gap: 12px;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
 
         .button {
@@ -334,7 +369,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </h1>
 
             <p class="lead">
-                Keep track of your cycle by adding the dates and flow intensity.
+                Keep track of your cycle and predict your next period.
             </p>
 
         </div>
@@ -358,6 +393,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <input
                     type="date"
                     name="start_date"
+                    id="start_date"
                     required
                 >
 
@@ -404,6 +440,70 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </label>
 
 
+            <!-- Cycle Length -->
+
+            <label>
+
+                Your Cycle Length
+
+                <select id="cycle_length">
+
+                    <option value="21">21 days</option>
+                    <option value="22">22 days</option>
+                    <option value="23">23 days</option>
+                    <option value="24">24 days</option>
+                    <option value="25">25 days</option>
+                    <option value="26">26 days</option>
+                    <option value="27">27 days</option>
+                    <option value="28" selected>28 days</option>
+                    <option value="29">29 days</option>
+                    <option value="30">30 days</option>
+                    <option value="31">31 days</option>
+                    <option value="32">32 days</option>
+                    <option value="33">33 days</option>
+                    <option value="34">34 days</option>
+                    <option value="35">35 days</option>
+
+                </select>
+
+            </label>
+
+
+            <!-- Predict Button -->
+
+            <button
+                type="button"
+                class="button"
+                onclick="predictPeriod()"
+            >
+                🌸 Predict Next Period
+            </button>
+
+
+            <!-- Prediction Result -->
+
+            <div
+                class="prediction-box"
+                id="predictionBox"
+            >
+
+                <h2>
+                    🌸 Your Next Period
+                </h2>
+
+                <div
+                    class="prediction-date"
+                    id="predictionDate"
+                ></div>
+
+                <div class="prediction-note">
+                    Based on your selected cycle length.
+                    This is an estimated date and may vary.
+                </div>
+
+            </div>
+
+
             <div class="actions">
 
                 <button
@@ -428,8 +528,47 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 </main>
 
+
+<script>
+
+function predictPeriod() {
+
+    const startDate = document.getElementById("start_date").value;
+    const cycleLength = parseInt(
+        document.getElementById("cycle_length").value
+    );
+
+    if (!startDate) {
+
+        alert("Please select your last period start date. 🌸");
+        return;
+    }
+
+    const date = new Date(startDate + "T00:00:00");
+
+    date.setDate(date.getDate() + cycleLength);
+
+    const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    };
+
+    const predictedDate = date.toLocaleDateString(
+        "en-US",
+        options
+    );
+
+    document.getElementById("predictionDate").textContent =
+        predictedDate;
+
+    document.getElementById("predictionBox").style.display =
+        "block";
+}
+
+</script>
+
 </body>
 
 </html>
-
 

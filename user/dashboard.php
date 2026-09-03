@@ -31,6 +31,7 @@ if (!$user) {
     header("Location: ../login.php");
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -547,6 +548,7 @@ if (!$user) {
 
         </article>
 
+
     </section>
 
 </main>
@@ -554,4 +556,3 @@ if (!$user) {
 </body>
 
 </html>
-
