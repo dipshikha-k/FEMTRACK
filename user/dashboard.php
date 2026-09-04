@@ -62,14 +62,15 @@ if (!$user) {
             padding: 18px 6%;
             border-bottom: 1px solid #f5dce9;
             box-shadow: 0 4px 20px rgba(180, 80, 130, 0.08);
+            
         }
 
         .logo {
-            color: #8f3d68;
+            color: #3d1934;;
         }
 
         .logo span {
-            color: #e78ab5;
+            color: #d75b93;
         }
 
         .nav a {
