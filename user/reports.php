@@ -267,8 +267,8 @@ tr:hover td {
 <nav class="topbar">
 
 <a class="logo" href="dashboard.php">
-<img class="logo-mark" src="../assets/femtrack-mark.jpeg">
-Fem<span>Track</span>
+    <img class="logo-mark" src="../assets/femtrack-mark.jpeg" alt="">
+    <span>Fem<span>Track</span></span>
 </a>
 
 <div class="nav">

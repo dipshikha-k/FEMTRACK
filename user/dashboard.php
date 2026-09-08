@@ -344,52 +344,50 @@ if (!$user) {
 
 <body>
 
-<main class="app-shell">
+<nav class="home-nav" aria-label="Main navigation">
 
-    <nav class="topbar">
+    <a class="home-logo" href="../index.php" aria-label="FemTrack home">
 
-        <a class="logo" href="dashboard.php">
+        <img
+            src="../assets/femtrack-mark.jpeg"
+            alt=""
+        >
 
-            <img
-                class="logo-mark"
-                src="../assets/femtrack-mark.jpeg"
-                alt="FemTrack logo"
-            >
+        <span>Fem<span>Track</span></span>
 
-            Fem<span>Track</span>
+    </a>
 
+    <div class="home-nav-links app-nav-links">
+
+        <a href="../index.php">
+            Home
         </a>
 
+        <a class="active" href="dashboard.php">
+            Dashboard
+        </a>
 
-        <div class="nav">
+        <a href="track-symptoms.php">
+            Track Symptoms
+        </a>
 
-            <a href="../index.php">
-                Home
-            </a>
+        <a href="reports.php">
+            Reports
+        </a>
 
-            <a class="active" href="dashboard.php">
-                Dashboard
-            </a>
+        <a href="../about.php">
+            About Us
+        </a>
 
-            <a href="track-symptoms.php">
-                Track Symptoms
-            </a>
+        <a class="nav-logout" href="../logout.php">
+            Logout
+        </a>
 
-            <a href="reports.php">
-                Reports
-            </a>
+    </div>
 
-            <a href="../about.php">
-                About Us
-            </a>
+</nav>
 
-            <a class="logout" href="../logout.php">
-                Logout
-            </a>
 
-        </div>
-
-    </nav>
 
 
     <section class="hero">

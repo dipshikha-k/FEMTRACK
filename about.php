@@ -40,31 +40,40 @@ session_start();
             border-bottom: 1px solid #f3dce7;
             box-shadow: 0 4px 20px rgba(100,40,70,0.06);
         }
-
         .about-page .logo {
-            color: #713552;
-            font-size: 25px;
-        }
+    color: #3d1934;
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: -.04em;
+    text-decoration: none;
+}
 
-        .about-page .logo span {
-            color: #d875a1;
-        }
+.about-page .logo > span > span {
+    color: #d75b93;
+}
 
-        .about-page .nav a {
-            color: #70485b;
-            transition: .3s;
-        }
+.about-page .logo:hover {
+    color: #3d1934;
+    text-decoration: none;
+}
 
-        .about-page .nav a:hover,
-        .about-page .nav a.active {
-            color: #bd4e7d;
-            background: #fce5ef;
-        }
+.about-page .nav a {
+    color: #70485b;
+    transition: .3s;
+}
 
-        .about-page .nav .logout {
-            background: #c65384;
-            color: white;
-        }
+.about-page .nav a:hover,
+.about-page .nav a.active {
+    color: #c64e86;
+    background: transparent;
+}
+
+.about-page .nav .logout {
+    background: #401c38;
+    color: white;
+}
+
+   
 
 
         /* ---------- MAIN ---------- */
@@ -669,17 +678,17 @@ session_start();
 
 <nav class="topbar">
 
-    <a class="logo" href="index.php">
+<a class="logo" href="index.php">
 
-        <img
-            class="logo-mark"
-            src="assets/femtrack-mark.jpeg"
-            alt="FemTrack"
-        >
+    <img
+        class="logo-mark"
+        src="assets/femtrack-mark.jpeg"
+        alt="FemTrack"
+    >
 
-        Fem<span>Track</span>
+    <span>Fem<span>Track</span></span>
 
-    </a>
+</a>
 
 
     <div class="nav">
@@ -956,4 +965,3 @@ session_start();
 </body>
 
 </html>
-
