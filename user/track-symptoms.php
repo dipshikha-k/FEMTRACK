@@ -1403,7 +1403,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div class="form-group">
 
                             <label for="severity">
-                                How intense is it today?
+                                How does it feel today?
                             </label>
 
                             <select
@@ -1424,17 +1424,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 </option>
 
                                 <option
-                                    value="Moderate"
+                                    value="Uncomfortable"
                                     <?php echo (($_POST["severity"] ?? "") === "Moderate") ? "selected" : ""; ?>
                                 >
-                                    Moderate
+                                    Uncomfortable
                                 </option>
 
                                 <option
-                                    value="Severe"
+                                    value="Very Uncomfortable"
                                     <?php echo (($_POST["severity"] ?? "") === "Severe") ? "selected" : ""; ?>
                                 >
-                                    Severe
+                                    Very Uncomfortable
                                 </option>
 
                             </select>
