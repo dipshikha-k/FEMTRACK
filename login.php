@@ -1,20 +1,52 @@
 <?php
+
 session_start();
+
+require_once __DIR__ . "/config/database.php";
+
 
 /*
 |--------------------------------------------------------------------------
 | ALREADY LOGGED IN CHECK
 |--------------------------------------------------------------------------
+| If the user is already logged in, check their role and send them
+| to the correct dashboard.
+|--------------------------------------------------------------------------
 */
 
 if (isset($_SESSION["user_id"])) {
-    header("Location: user/dashboard.php");
-    exit;
+
+    $user_id = $_SESSION["user_id"];
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "SELECT role FROM users WHERE id = ?"
+    );
+
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+
+    $result = mysqli_stmt_get_result($stmt);
+    $logged_in_user = mysqli_fetch_assoc($result);
+
+    mysqli_stmt_close($stmt);
+
+
+    if ($logged_in_user && $logged_in_user["role"] === "admin") {
+
+        header("Location: user/admin.php");
+        exit;
+
+    } else {
+
+        header("Location: user/dashboard.php");
+        exit;
+    }
 }
 
-require_once __DIR__ . "/config/database.php";
 
 $message = "";
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,24 +59,71 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim($_POST["email"] ?? "");
     $password = $_POST["password"] ?? "";
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDATION
+    |--------------------------------------------------------------------------
+    */
+
     if (empty($email) || empty($password)) {
 
         $message = "Please enter your email and password.";
 
     } else {
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | FIND USER
+        |--------------------------------------------------------------------------
+        */
+
         $stmt = mysqli_prepare(
             $conn,
-            "SELECT id, password FROM users WHERE email = ?"
+            "SELECT id, password, role
+             FROM users
+             WHERE email = ?"
         );
 
-        mysqli_stmt_bind_param($stmt, "s", $email);
+        mysqli_stmt_bind_param(
+            $stmt,
+            "s",
+            $email
+        );
+
         mysqli_stmt_execute($stmt);
 
         $result = mysqli_stmt_get_result($stmt);
+
         $user = mysqli_fetch_assoc($result);
 
-        if ($user && password_verify($password, $user["password"])) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | CHECK PASSWORD
+        |--------------------------------------------------------------------------
+        */
+
+        if (
+            $user &&
+            password_verify(
+                $password,
+                $user["password"]
+            )
+        ) {
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | REGENERATE SESSION ID
+            |--------------------------------------------------------------------------
+            | Helps protect the login session.
+            |--------------------------------------------------------------------------
+            */
+
+            session_regenerate_id(true);
+
 
             /*
             |--------------------------------------------------------------------------
@@ -54,30 +133,53 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $_SESSION["user_id"] = $user["id"];
 
+            $_SESSION["role"] = $user["role"];
+
+
             /*
             |--------------------------------------------------------------------------
-            | REDIRECT AFTER LOGIN
+            | ADMIN LOGIN
             |--------------------------------------------------------------------------
             */
 
-            $redirect = $_SESSION["redirect_after_login"] ?? "user/dashboard.php";
+            if ($user["role"] === "admin") {
+
+                header("Location: user/admin.php");
+                exit;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | NORMAL MEMBER LOGIN
+            |--------------------------------------------------------------------------
+            */
+
+            $redirect = $_SESSION["redirect_after_login"]
+                ?? "user/dashboard.php";
+
 
             unset($_SESSION["redirect_after_login"]);
 
+
             header("Location: " . $redirect);
             exit;
+
 
         } else {
 
             $message = "Invalid email or password.";
         }
 
+
         mysqli_stmt_close($stmt);
     }
 }
+
 ?>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -91,38 +193,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <title>Login - FemTrack</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
 
 </head>
 
+
 <body class="auth-page">
 
+
     <main class="auth-card">
+
 
         <div class="brand">
             FemTrack
         </div>
 
+
         <h1>
             Welcome back
         </h1>
+
 
         <p class="lead">
             Log in to keep your cycle information private,
             organized, and easy to follow.
         </p>
 
+
         <?php if (!empty($message)): ?>
 
             <p class="notice">
-                <?php echo htmlspecialchars($message); ?>
+                <?php
+                echo htmlspecialchars($message);
+                ?>
             </p>
 
         <?php endif; ?>
 
-        <form method="POST" class="form-stack">
+
+        <form
+            method="POST"
+            class="form-stack"
+        >
+
 
             <label>
+
                 Email
 
                 <input
@@ -131,9 +250,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     placeholder="you@example.com"
                     required
                 >
+
             </label>
 
+
             <label>
+
                 Password
 
                 <input
@@ -142,7 +264,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     placeholder="Your password"
                     required
                 >
+
             </label>
+
 
             <button
                 class="button"
@@ -151,7 +275,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 Log in
             </button>
 
+
         </form>
+
 
         <p class="text-center muted">
 
@@ -163,7 +289,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         </p>
 
+
     </main>
+
 
 </body>
 

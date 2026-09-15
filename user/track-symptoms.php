@@ -127,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $message = "Please tell us what you're experiencing.";
         $message_type = "error";
 
-    } elseif (!in_array($severity, ["Mild", "Moderate", "Severe"])) {
+    } elseif (!in_array($severity, ["Mild", "Uncomfortable", "Very Uncomfortable"])) {
 
         $message = "Please select a valid severity level.";
         $message_type = "error";
@@ -198,7 +198,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if (
                 $mood === "Irritated" &&
-                $mood_swings === "Severe"
+                $mood_swings === "Intense"
             ) {
 
                 $femtrackMessage =
@@ -215,7 +215,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ) {
 
                 $femtrackMessage =
-                    "Girl, put on your lip gloss and SLAY, diva. This energy looks good on you, so enjoy it, protect it, and don't let this irritating world dim your shine.";
+                    "Girl SLAY, diva. This energy looks good on you, so enjoy it, protect it, and don't let this irritating world dim your shine.";
 
             } elseif ($mood === "Happy") {
 
@@ -224,14 +224,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             } elseif (
                 $cravings === "Spicy" &&
-                $mood_swings === "Severe"
+                $mood_swings === "Intense"
             ) {
 
                 $femtrackMessage =
                     "Girl… spicy cravings and mood swings are really doing the most today. Take a breath, protect your peace, and please do not make any emotionally questionable decisions tonight.";
 
             } elseif (
-                $cravings === "Chocolate" &&
+                $cravings === "Sweets" &&
                 $energy === "Very Low"
             ) {
 
@@ -264,7 +264,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             } elseif (
                 $mood === "Anxious" &&
-                $mood_swings === "Severe"
+                $mood_swings === "Intense"
             ) {
 
                 $femtrackMessage =
@@ -272,15 +272,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             } elseif (
                 $pain !== "" &&
-                $severity === "Severe"
+                $severity === "Very Uncomfortable"
             ) {
-
+ 
                 $femtrackMessage =
                     "Girl… your body is asking for extra care today. Slow down, get comfortable, and make taking care of yourself the priority.";
 
             } elseif (
-                $bloating === "Severe" &&
-                $cravings === "Chocolate"
+                $bloating === "Intense" &&
+                $cravings === "Sweets"
             ) {
 
                 $femtrackMessage =
@@ -316,12 +316,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $femtrackMessage =
                     "Girl… the spicy cravings have entered the chat. Your body clearly wants a little excitement, so enjoy the craving and take care of yourself while you're at it.";
 
-            } elseif ($cravings === "Chocolate") {
+            } elseif ($cravings === "Sweets") {
 
                 $femtrackMessage =
                     "Girl… chocolate is clearly on the agenda today. Consider this your gentle reminder that a little comfort is allowed.";
 
-            } elseif ($severity === "Severe") {
+            } elseif ($severity === "Very Uncomfortable") {
 
                 $femtrackMessage =
                     "Girl… your body is asking for extra attention today. Be gentle with yourself, slow the pace, and make your comfort a priority.";
@@ -510,7 +510,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             padding: 34px;
 
             box-shadow:
-                0 22px 60px rgba(104, 36, 69, 0.10);
+                0 22px 60px rgba(232, 101, 164, 0.1);
         }
 
         .form-card::before {
@@ -1406,38 +1406,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 How does it feel today?
                             </label>
 
-                            <select
-                                id="severity"
-                                name="severity"
-                                required
-                            >
+                        <select id="severity" name="severity" required>
+    <option value="">Choose one</option>
 
-                                <option value="">
-                                    Choose one
-                                </option>
+    <option value="Mild"
+        <?php echo (($_POST["severity"] ?? "") === "Mild") ? "selected" : ""; ?>>
+        Mild
+    </option>
 
-                                <option
-                                    value="Mild"
-                                    <?php echo (($_POST["severity"] ?? "") === "Mild") ? "selected" : ""; ?>
-                                >
-                                    Mild
-                                </option>
+    <option value="Uncomfortable"
+        <?php echo (($_POST["severity"] ?? "") === "Uncomfortable") ? "selected" : ""; ?>>
+        Uncomfortable
+    </option>
 
-                                <option
-                                    value="Uncomfortable"
-                                    <?php echo (($_POST["severity"] ?? "") === "Moderate") ? "selected" : ""; ?>
-                                >
-                                    Uncomfortable
-                                </option>
-
-                                <option
-                                    value="Very Uncomfortable"
-                                    <?php echo (($_POST["severity"] ?? "") === "Severe") ? "selected" : ""; ?>
-                                >
-                                    Very Uncomfortable
-                                </option>
-
-                            </select>
+    <option value="Very Uncomfortable"
+        <?php echo (($_POST["severity"] ?? "") === "Very Uncomfortable") ? "selected" : ""; ?>>
+        Very Uncomfortable
+    </option>
+</select>
 
                         </div>
 
@@ -1543,7 +1529,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="form-group">
 
                         <label>
-                            How much are your moods switching up?
+                            How noticeable are your mood shifts?
+                            
                         </label>
 
                         <div class="choice-grid">
@@ -1551,7 +1538,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <?php
 
                             foreach (
-                                ["Mild", "Moderate", "Severe"]
+                                ["Slight", "Noticeable", "Intense"]
                                 as $option
                             ):
 
@@ -1659,7 +1646,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="form-group">
 
                         <label>
-                            Any bloating?
+                            How would you describe your abdominal sensations?
                         </label>
 
                         <div class="choice-grid four">
@@ -1667,7 +1654,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <?php
 
                             foreach (
-                                ["None", "Mild", "Moderate", "Severe"]
+                                ["None", "Slight", "Noticeable", "Intense"]
                                 as $option
                             ):
 
@@ -1868,9 +1855,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             foreach (
                                 [
-                                    "Chocolate",
                                     "Spicy",
-                                    "Sweet",
+                                    "Sweets",
                                     "Salty",
                                     "None"
                                 ]
@@ -2013,7 +1999,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                         Fill in your little check-in and
                         I'll leave you a personalized note
-                        right here, babe ♡
+                        right here.
 
                     </div>
 
@@ -2027,9 +2013,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <div class="privacy-card">
 
-                <div class="privacy-icon">
-                    ♡
-                </div>
+                
 
                 <h3>
                     Your check-in stays private.
