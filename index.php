@@ -29,7 +29,7 @@ $heroImage = file_exists(__DIR__ . "/assets/home-hero.png")
             <a href="user/track-symptoms.php">Track Symptoms</a>
             <a href="user/reports.php">Reports</a>
             <a href="about.php">About Us</a>
-            <a class="nav-logout" href="logout.php">Logout</a>
+            <a class="nav-logout" href="login.php">Login</a>
         </div>
     </nav>
 
