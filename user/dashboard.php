@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -31,7 +30,6 @@ if (!$user) {
     header("Location: ../login.php");
     exit;
 }
-
 ?>
 
 <!DOCTYPE html>
