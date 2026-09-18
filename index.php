@@ -1,8 +1,6 @@
 <?php
 session_start();
 
-
-
 // Drop the supplied hero image in assets/home-hero.png to use it automatically.
 $heroImage = file_exists(__DIR__ . "/assets/home-hero.png")
     ? "assets/home-hero.png"

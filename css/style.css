@@ -35,8 +35,10 @@ body {
 .home-nav-links .nav-login { color: #c64e86; }
 .home-nav-links .nav-join { background: #3d1934; border-radius: 999px; color: #fff; padding: 11px 18px; }
 .home-nav-links .nav-join:hover { background: #6d2a5a; color: #fff; }
-.home-nav-links .nav-logout { background: #3d1934; border-radius: 999px; color: #fff; padding: 11px 18px; }
-.home-nav-links .nav-logout:hover { background: #6d2a5a; color: #fff; }
+.home-nav-links .nav-logout {background: #3d1934; color: #fff; border-radius: 999PX; }
+.home-nav-links .nav-logout:hover { background: transparent !important;
+    color: #c64e86;
+    text-decoration: none; }
 
 /* One shared navigation component used on every FemTrack page. */
 .site-nav { align-items: center; background: rgba(255, 250, 252, .97); border-bottom: 1px solid #f4dbe5; box-shadow: 0 5px 18px rgba(102, 45, 78, .08); display: flex; justify-content: space-between; min-height: 70px; padding: 12px max(18px, calc((100% - 1120px) / 2)); position: sticky; top: 0; z-index: 100; }
@@ -177,8 +179,8 @@ input:focus, select:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rg
     color: #c64e86 !important;
     text-decoration: none;
 }
-.nav .logout { background: #3d1934; color: #fff; }
-.nav .logout:hover { background: #6d2a5a; color: #fff; }
+.nav .logout { background: #3d1934; color: #fff; border-radius: 999PX;}
+
 
 .hero { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin: 38px auto 28px !important; }
 .eyebrow { color: var(--brand); font-size: .82rem; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }

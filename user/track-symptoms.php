@@ -1,3 +1,4 @@
+
 <?php
 
 session_start();
@@ -127,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $message = "Please tell us what you're experiencing.";
         $message_type = "error";
 
-    } elseif (!in_array($severity, ["Mild", "Moderate", "Severe"])) {
+    } elseif (!in_array($severity, ["Mild", "Uncomfortable", "Very Uncomfortable"])) {
 
         $message = "Please select a valid severity level.";
         $message_type = "error";
@@ -198,7 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if (
                 $mood === "Irritated" &&
-                $mood_swings === "Severe"
+                $mood_swings === "Intense"
             ) {
 
                 $femtrackMessage =
@@ -215,7 +216,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ) {
 
                 $femtrackMessage =
-                    "Girl, put on your lip gloss and SLAY, diva. This energy looks good on you, so enjoy it, protect it, and don't let this irritating world dim your shine.";
+                    "Girl SLAY, diva. This energy looks good on you, so enjoy it, protect it, and don't let this irritating world dim your shine.";
 
             } elseif ($mood === "Happy") {
 
@@ -224,14 +225,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             } elseif (
                 $cravings === "Spicy" &&
-                $mood_swings === "Severe"
+                $mood_swings === "Intense"
             ) {
 
                 $femtrackMessage =
                     "Girl… spicy cravings and mood swings are really doing the most today. Take a breath, protect your peace, and please do not make any emotionally questionable decisions tonight.";
 
             } elseif (
-                $cravings === "Chocolate" &&
+                $cravings === "Sweets" &&
                 $energy === "Very Low"
             ) {
 
@@ -264,7 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             } elseif (
                 $mood === "Anxious" &&
-                $mood_swings === "Severe"
+                $mood_swings === "Intense"
             ) {
 
                 $femtrackMessage =
@@ -272,15 +273,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             } elseif (
                 $pain !== "" &&
-                $severity === "Severe"
+                $severity === "Very Uncomfortable"
             ) {
 
                 $femtrackMessage =
                     "Girl… your body is asking for extra care today. Slow down, get comfortable, and make taking care of yourself the priority.";
 
             } elseif (
-                $bloating === "Severe" &&
-                $cravings === "Chocolate"
+                $bloating === "Intense" &&
+                $cravings === "Sweets"
             ) {
 
                 $femtrackMessage =
@@ -316,12 +317,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $femtrackMessage =
                     "Girl… the spicy cravings have entered the chat. Your body clearly wants a little excitement, so enjoy the craving and take care of yourself while you're at it.";
 
-            } elseif ($cravings === "Chocolate") {
+            } elseif ($cravings === "Sweets") {
 
                 $femtrackMessage =
                     "Girl… chocolate is clearly on the agenda today. Consider this your gentle reminder that a little comfort is allowed.";
 
-            } elseif ($severity === "Severe") {
+            } elseif ($severity === "Very Uncomfortable") {
 
                 $femtrackMessage =
                     "Girl… your body is asking for extra attention today. Be gentle with yourself, slow the pace, and make your comfort a priority.";
@@ -510,7 +511,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             padding: 34px;
 
             box-shadow:
-                0 22px 60px rgba(104, 36, 69, 0.10);
+                0 22px 60px rgba(232, 101, 164, 0.1);
         }
 
         .form-card::before {
@@ -1138,6 +1139,246 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         /* =========================================================
+           FEMTRACK POPUP
+        ========================================================= */
+
+        .femtrack-popup-overlay {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 9999;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                rgba(54, 28, 43, 0.38);
+
+            backdrop-filter: blur(6px);
+
+            animation:
+                popupFadeIn .25s ease;
+        }
+
+
+        .femtrack-popup {
+
+            position: relative;
+
+            width: min(480px, 100%);
+
+            padding: 38px 34px 32px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #fff0f6,
+                    #ffe4ee
+                );
+
+            border: 1px solid #f5c6d8;
+
+            border-radius: 28px;
+
+            text-align: center;
+
+            box-shadow:
+                0 25px 70px rgba(94, 32, 59, .25);
+
+            animation:
+                popupSlideUp .35s ease;
+        }
+
+
+        .femtrack-popup-heart {
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 58px;
+            height: 58px;
+
+            margin: 0 auto 18px;
+
+            background: #ffffff;
+
+            border-radius: 50%;
+
+            color: #df3f82;
+
+            font-size: 26px;
+
+            box-shadow:
+                0 8px 22px rgba(218, 59, 125, .14);
+        }
+
+
+        .femtrack-popup h2 {
+
+            margin: 0 0 9px;
+
+            color: #432535;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 27px;
+
+            font-style: italic;
+        }
+
+
+        .femtrack-popup-subtitle {
+
+            margin-bottom: 20px;
+
+            color: #c43a73;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+        }
+
+
+        .femtrack-popup-message {
+
+            padding: 20px;
+
+            background:
+                rgba(255, 255, 255, .62);
+
+            border: 1px solid
+                rgba(230, 126, 165, .22);
+
+            border-radius: 17px;
+
+            color: #624353;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 15px;
+
+            line-height: 1.75;
+        }
+
+
+        .femtrack-popup-signature {
+
+            margin-top: 18px;
+
+            color: #bc5d86;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 13px;
+
+            font-style: italic;
+        }
+
+
+        .femtrack-popup-close {
+
+            width: 100%;
+
+            margin-top: 23px;
+
+            padding: 13px 18px;
+
+            border: none;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #d73b80,
+                    #ef5f9a
+                );
+
+            color: #ffffff;
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 22px
+                rgba(218, 52, 123, .20);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease;
+        }
+
+
+        .femtrack-popup-close:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 14px 28px
+                rgba(218, 52, 123, .27);
+        }
+
+
+        @keyframes popupFadeIn {
+
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+
+        @keyframes popupSlideUp {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(25px)
+                    scale(.96);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        /* =========================================================
            MOBILE
         ========================================================= */
 
@@ -1215,6 +1456,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 font-size: 27px;
             }
+
+
+            /* POPUP MOBILE */
+
+            .femtrack-popup {
+
+                padding: 32px 20px 25px;
+
+                border-radius: 23px;
+            }
+
+            .femtrack-popup h2 {
+
+                font-size: 24px;
+            }
+
+            .femtrack-popup-message {
+
+                font-size: 14px;
+
+                padding: 17px;
+            }
         }
 
     </style>
@@ -1286,7 +1549,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </nav>
 
 
-
 <!-- =========================================================
      MAIN
 ========================================================= -->
@@ -1319,7 +1581,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
 
-
     <!-- CONTENT -->
 
     <div class="content-grid">
@@ -1345,7 +1606,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
 
-
             <?php if ($message !== ""): ?>
 
                 <div class="form-alert <?php echo $message_type; ?>">
@@ -1357,13 +1617,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <?php endif; ?>
 
 
-
             <form method="POST" action="">
 
 
-                <!-- =================================================
-                     FIRST THINGS FIRST
-                ================================================== -->
+                <!-- FIRST THINGS FIRST -->
 
                 <section class="form-section">
 
@@ -1403,7 +1660,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <div class="form-group">
 
                             <label for="severity">
-                                How intense is it today?
+                                How does it feel today?
                             </label>
 
                             <select
@@ -1424,17 +1681,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                                 </option>
 
                                 <option
-                                    value="Moderate"
-                                    <?php echo (($_POST["severity"] ?? "") === "Moderate") ? "selected" : ""; ?>
+                                    value="Uncomfortable"
+                                    <?php echo (($_POST["severity"] ?? "") === "Uncomfortable") ? "selected" : ""; ?>
                                 >
-                                    Moderate
+                                    Uncomfortable
                                 </option>
 
                                 <option
-                                    value="Severe"
-                                    <?php echo (($_POST["severity"] ?? "") === "Severe") ? "selected" : ""; ?>
+                                    value="Very Uncomfortable"
+                                    <?php echo (($_POST["severity"] ?? "") === "Very Uncomfortable") ? "selected" : ""; ?>
                                 >
-                                    Severe
+                                    Very Uncomfortable
                                 </option>
 
                             </select>
@@ -1468,10 +1725,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </section>
 
 
-
-                <!-- =================================================
-                     MOOD
-                ================================================== -->
+                <!-- MOOD -->
 
                 <section class="form-section">
 
@@ -1537,13 +1791,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
 
 
-
                     <!-- MOOD SWINGS -->
 
                     <div class="form-group">
 
                         <label>
-                            How much are your moods switching up?
+                            How noticeable are your mood shifts?
                         </label>
 
                         <div class="choice-grid">
@@ -1551,7 +1804,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <?php
 
                             foreach (
-                                ["Mild", "Moderate", "Severe"]
+                                ["Slight", "Noticeable", "Intense"]
                                 as $option
                             ):
 
@@ -1580,7 +1833,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
 
                     </div>
-
 
 
                     <!-- ENERGY -->
@@ -1634,10 +1886,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </section>
 
 
-
-                <!-- =================================================
-                     BODY
-                ================================================== -->
+                <!-- BODY -->
 
                 <section class="form-section">
 
@@ -1659,7 +1908,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <div class="form-group">
 
                         <label>
-                            Any bloating?
+                            How would you describe your abdominal sensations?
                         </label>
 
                         <div class="choice-grid four">
@@ -1667,7 +1916,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <?php
 
                             foreach (
-                                ["None", "Mild", "Moderate", "Severe"]
+                                ["None", "Slight", "Noticeable", "Intense"]
                                 as $option
                             ):
 
@@ -1696,7 +1945,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
 
                     </div>
-
 
 
                     <!-- PAIN -->
@@ -1743,7 +1991,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
 
 
-
                     <!-- SLEEP -->
 
                     <div class="form-group">
@@ -1786,7 +2033,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         </div>
 
                     </div>
-
 
 
                     <!-- SKIN -->
@@ -1834,10 +2080,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </section>
 
 
-
-                <!-- =================================================
-                     CRAVINGS & CARE
-                ================================================== -->
+                <!-- CRAVINGS & CARE -->
 
                 <section class="form-section">
 
@@ -1868,9 +2111,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                             foreach (
                                 [
-                                    "Chocolate",
                                     "Spicy",
-                                    "Sweet",
+                                    "Sweets",
                                     "Salty",
                                     "None"
                                 ]
@@ -1904,7 +2146,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
 
 
-
                     <!-- MEDICATION -->
 
                     <div class="form-group">
@@ -1928,7 +2169,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
 
 
-
                     <!-- NOTES -->
 
                     <div class="form-group">
@@ -1948,10 +2188,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 </section>
 
 
-
-                <!-- =================================================
-                     SAVE BUTTON
-                ================================================== -->
+                <!-- SAVE BUTTON -->
 
                 <div class="save-area">
 
@@ -1968,7 +2205,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </form>
 
         </div>
-
 
 
         <!-- =====================================================
@@ -2013,7 +2249,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                         Fill in your little check-in and
                         I'll leave you a personalized note
-                        right here, babe ♡
+                        right here.
 
                     </div>
 
@@ -2022,14 +2258,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
 
-
             <!-- PRIVACY -->
 
             <div class="privacy-card">
-
-                <div class="privacy-icon">
-                    ♡
-                </div>
 
                 <h3>
                     Your check-in stays private.
@@ -2052,6 +2283,125 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </main>
 
 
+<!-- =========================================================
+     FEMTRACK POPUP
+========================================================= -->
+
+<?php if ($femtrackMessage !== "" && $message_type === "success"): ?>
+
+    <div
+        class="femtrack-popup-overlay"
+        id="femtrackPopup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="femtrackPopupTitle"
+    >
+
+        <div class="femtrack-popup">
+
+            <div class="femtrack-popup-heart">
+                ♡
+            </div>
+
+            <h2 id="femtrackPopupTitle">
+                Your check-in is saved ♡
+            </h2>
+
+            <div class="femtrack-popup-subtitle">
+                A little note from FemTrack
+            </div>
+
+            <div class="femtrack-popup-message">
+
+                <?php
+                echo htmlspecialchars($femtrackMessage);
+                ?>
+
+            </div>
+
+            <div class="femtrack-popup-signature">
+                with love, FemTrack ♡
+            </div>
+
+            <button
+                type="button"
+                class="femtrack-popup-close"
+                onclick="closeFemtrackPopup()"
+            >
+                Thank you, FemTrack ♡
+            </button>
+
+        </div>
+
+    </div>
+
+<?php endif; ?>
+
+
+<script>
+
+function closeFemtrackPopup() {
+
+    const popup =
+        document.getElementById("femtrackPopup");
+
+    if (popup) {
+
+        popup.style.opacity = "0";
+
+        setTimeout(function () {
+
+            popup.remove();
+
+        }, 200);
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CLOSE POPUP WITH ESCAPE
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        closeFemtrackPopup();
+
+    }
+
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| CLOSE WHEN CLICKING OUTSIDE THE POPUP
+|--------------------------------------------------------------------------
+*/
+
+const popupOverlay =
+    document.getElementById("femtrackPopup");
+
+if (popupOverlay) {
+
+    popupOverlay.addEventListener("click", function(event) {
+
+        if (event.target === popupOverlay) {
+
+            closeFemtrackPopup();
+
+        }
+
+    });
+
+}
+
+</script>
+
+
 </body>
 
 </html>
+```

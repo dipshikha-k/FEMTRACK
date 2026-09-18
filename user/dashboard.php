@@ -1,14 +1,30 @@
 <?php
+
 session_start();
 
 require_once __DIR__ . '/../config/database.php';
 
+
+/*
+|--------------------------------------------------------------------------
+| LOGIN CHECK
+|--------------------------------------------------------------------------
+*/
+
 if (!isset($_SESSION["user_id"])) {
+
     header("Location: ../login.php");
     exit;
 }
 
 $user_id = $_SESSION["user_id"];
+
+
+/*
+|--------------------------------------------------------------------------
+| GET USER INFORMATION
+|--------------------------------------------------------------------------
+*/
 
 $stmt = mysqli_prepare(
     $conn,
@@ -23,13 +39,49 @@ $user = mysqli_fetch_assoc($result);
 
 mysqli_stmt_close($stmt);
 
+
 if (!$user) {
+
     session_unset();
     session_destroy();
 
     header("Location: ../login.php");
     exit;
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| CHECK IF USER HAS PERIOD HISTORY
+|--------------------------------------------------------------------------
+|
+| New user:
+| 0 period records → View History will NOT appear.
+|
+| Existing user:
+| 1 or more period records → View History will appear.
+|
+*/
+
+$hasPeriodHistory = false;
+
+$stmt = mysqli_prepare(
+    $conn,
+    "SELECT COUNT(*) AS total FROM period_logs WHERE user_id = ?"
+);
+
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+
+$result = mysqli_stmt_get_result($stmt);
+$periodData = mysqli_fetch_assoc($result);
+
+mysqli_stmt_close($stmt);
+
+if ($periodData && $periodData["total"] > 0) {
+    $hasPeriodHistory = true;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -46,25 +98,29 @@ if (!$user) {
 
     <style>
 
-        /* ===== FEMTRACK DASHBOARD ===== */
+        /* =========================================================
+           FEMTRACK DASHBOARD
+        ========================================================= */
 
         body {
             background: #fff7fb;
             color: #54243d;
         }
 
-        /* NAVBAR */
+
+        /* =========================================================
+           NAVBAR
+        ========================================================= */
 
         .topbar {
             background: white;
             padding: 18px 6%;
             border-bottom: 1px solid #f5dce9;
             box-shadow: 0 4px 20px rgba(180, 80, 130, 0.08);
-            
         }
 
         .logo {
-            color: #3d1934;;
+            color: #3d1934;
         }
 
         .logo span {
@@ -93,10 +149,12 @@ if (!$user) {
         }
 
 
-        /* HERO */
+        /* =========================================================
+           HERO
+        ========================================================= */
 
         .hero {
-            margin: 45px 6% 25px;
+            margin: 38px 6% 25px;
             padding: 45px;
 
             border-radius: 30px;
@@ -118,15 +176,19 @@ if (!$user) {
         .eyebrow {
             color: #c15b89;
             letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
         .hero h1 {
             color: #652746;
             font-size: 40px;
+            margin: 10px 0;
         }
 
         .lead {
             color: #8d6174;
+            margin: 0;
         }
 
         .hero-decoration {
@@ -134,7 +196,9 @@ if (!$user) {
         }
 
 
-        /* DASHBOARD */
+        /* =========================================================
+           DASHBOARD GRID
+        ========================================================= */
 
         .dashboard-grid {
             margin: 25px 6% 60px;
@@ -142,10 +206,17 @@ if (!$user) {
             display: grid;
 
             grid-template-columns:
-                1.2fr 1fr 1fr;
+                1.25fr 1fr 1fr;
 
             gap: 22px;
+
+            align-items: stretch;
         }
+
+
+        /* =========================================================
+           GENERAL CARD
+        ========================================================= */
 
         .card {
             background: white;
@@ -155,55 +226,202 @@ if (!$user) {
             border: 1px solid #f5dce8;
 
             box-shadow:
-                0 12px 30px rgba(160, 70, 110, 0.08);
+                0 12px 30px rgba(160, 70, 110, 0.07);
 
             transition: 0.3s;
+
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
 
             box-shadow:
-                0 18px 35px rgba(160, 70, 110, 0.13);
+                0 18px 35px rgba(160, 70, 110, 0.11);
         }
 
         .card h2 {
             color: #6e2e4c;
+            margin-top: 0;
         }
 
 
-        /* WELCOME CARD */
+        /* =========================================================
+           LEFT - FEMTRACK CARE CARD
+        ========================================================= */
 
-        .welcome-card {
+        .care-card {
+            position: relative;
+
+            padding: 30px;
+
             background: linear-gradient(
                 145deg,
-                #ffffff,
-                #fff0f7
+                #ffffff 0%,
+                #fff3f8 100%
             );
+
+            min-height: 385px;
         }
 
-        .welcome-card h2 {
-            font-size: 29px;
+        .care-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 170px;
+            height: 170px;
+
+            right: -65px;
+            top: -65px;
+
+            background: #fde1ed;
+
+            border-radius: 50%;
+
+            opacity: 0.55;
         }
 
-        .welcome-card h2 span {
-            color: #d75d91;
+        .care-card-header {
+            position: relative;
+            z-index: 1;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 18px;
         }
 
-        .muted {
-            color: #8d6978;
+        .care-icon {
+            width: 43px;
+            height: 43px;
+
+            border-radius: 50%;
+
+            background: #fde1ed;
+
+            color: #c94e82;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+        }
+
+        .care-card h2 {
+            margin: 0;
+
+            font-size: 27px;
+        }
+
+        .care-intro {
+            position: relative;
+            z-index: 1;
+
+            margin: 0 0 22px;
+
+            color: #8b6677;
+
+            font-size: 14px;
+
             line-height: 1.7;
         }
 
-        .flower {
-            position: absolute;
-            right: 25px;
-            bottom: 20px;
-            font-size: 45px;
+
+        /* =========================================================
+           CARE ITEMS
+        ========================================================= */
+
+        .care-list {
+            position: relative;
+            z-index: 1;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 11px;
+        }
+
+        .care-item {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 12px 14px;
+
+            background: rgba(255, 255, 255, 0.78);
+
+            border: 1px solid #f5dce8;
+
+            border-radius: 15px;
+        }
+
+        .care-item-icon {
+            width: 34px;
+            height: 34px;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background: #fff0f6;
+
+            color: #cc5083;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+        }
+
+        .care-item strong {
+            display: block;
+
+            color: #813553;
+
+            font-size: 13px;
+
+            margin-bottom: 2px;
+        }
+
+        .care-item span {
+            color: #997585;
+
+            font-size: 11px;
         }
 
 
-        /* QUICK ACTIONS */
+        /* =========================================================
+           BOTTOM MESSAGE
+        ========================================================= */
+
+        .care-message {
+            position: relative;
+            z-index: 1;
+
+            margin-top: 20px;
+
+            color: #b24b78;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           QUICK ACTIONS
+        ========================================================= */
+
+        .action-card {
+            padding: 30px;
+        }
 
         .quick-links {
             display: flex;
@@ -235,15 +453,18 @@ if (!$user) {
             display: block;
             color: #a83f70;
             margin-bottom: 5px;
+            font-size: 14px;
         }
 
         .quick-link span {
             color: #96717f;
-            font-size: 13px;
+            font-size: 12px;
         }
 
 
-        /* ICON */
+        /* =========================================================
+           ICON
+        ========================================================= */
 
         .card-icon {
             width: 42px;
@@ -264,7 +485,13 @@ if (!$user) {
         }
 
 
-        /* ACCOUNT */
+        /* =========================================================
+           ACCOUNT
+        ========================================================= */
+
+        .account-card {
+            padding: 30px;
+        }
 
         .details {
             display: flex;
@@ -276,23 +503,41 @@ if (!$user) {
 
         .details div {
             padding: 13px 0;
+
             border-bottom: 1px solid #f5e4eb;
         }
 
+        .details div:last-child {
+            border-bottom: none;
+        }
+
         .details dt {
-            font-size: 12px;
+            font-size: 11px;
+
             color: #a77a8c;
+
             margin-bottom: 5px;
+
+            text-transform: uppercase;
+
+            letter-spacing: .5px;
         }
 
         .details dd {
             margin: 0;
+
             color: #633049;
+
             font-weight: 600;
+
+            font-size: 13px;
+
+            word-break: break-word;
         }
 
         .member-badge {
             background: #fde1ed;
+
             color: #b23e73;
 
             padding: 6px 12px;
@@ -303,7 +548,37 @@ if (!$user) {
         }
 
 
-        /* MOBILE */
+        /* =========================================================
+           SMALL FOOTER NOTE
+        ========================================================= */
+
+        .dashboard-note {
+            margin-top: 18px;
+
+            text-align: center;
+
+            color: #a27b8b;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .care-card {
+                grid-column: 1 / -1;
+            }
+
+        }
+
 
         @media (max-width: 900px) {
 
@@ -331,29 +606,67 @@ if (!$user) {
             }
 
             .dashboard-grid {
-                margin: 25px 4%;
+                margin: 25px 4% 45px;
+
                 grid-template-columns: 1fr;
             }
+
+            .care-card {
+                grid-column: auto;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .hero {
+                padding: 25px 20px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .care-card,
+            .action-card,
+            .account-card {
+                padding: 23px;
+            }
+
         }
 
     </style>
 
 </head>
 
+
 <body>
+
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
 
 <nav class="home-nav" aria-label="Main navigation">
 
-    <a class="home-logo" href="../index.php" aria-label="FemTrack home">
+    <a
+        class="home-logo"
+        href="../index.php"
+        aria-label="FemTrack home"
+    >
 
         <img
             src="../assets/femtrack-mark.jpeg"
             alt=""
         >
 
-        <span>Fem<span>Track</span></span>
+        <span>
+            Fem<span>Track</span>
+        </span>
 
     </a>
+
 
     <div class="home-nav-links app-nav-links">
 
@@ -387,85 +700,201 @@ if (!$user) {
 
 
 
+<!-- =========================================================
+     HERO
+========================================================= -->
 
-    <section class="hero">
+<section class="hero">
 
-        <div>
+    <div>
 
-            <div class="eyebrow">
-                ♡ YOUR PERSONAL DASHBOARD
-            </div>
-
-            <h1>
-                Welcome back,
-                <?php echo htmlspecialchars($user["name"]); ?> ♡
-            </h1>
-
-            <p class="lead">
-                A calm little space to understand, track and care for yourself.
-            </p>
-
+        <div class="eyebrow">
+            ♡ YOUR PERSONAL DASHBOARD
         </div>
 
-        <div class="hero-decoration">
-            🌸
-        </div>
+        <h1>
+            Welcome,
+            <?php echo htmlspecialchars($user["name"]); ?> ♡
+        </h1>
 
-    </section>
+        <p class="lead">
+            A calm little space to understand, track and care for yourself.
+        </p>
 
-
-    <section class="dashboard-grid">
-
-
-        <article class="card welcome-card">
-
-            <div class="eyebrow">
-                TODAY WITH FEMTRACK
-            </div>
-
-            <h2>
-                Your wellbeing,<br>
-                <span>your way.</span>
-            </h2>
-
-            <p class="muted">
-                Your body deserves attention, kindness and care.
-                Keep your cycle records safely in one beautiful place.
-            </p>
-
-            <div class="flower">
-                🌷
-            </div>
-
-        </article>
+    </div>
 
 
-        <article class="card">
+    <div class="hero-decoration">
+        🌸
+    </div>
 
-            <div class="card-icon">
+</section>
+
+
+
+<!-- =========================================================
+     DASHBOARD CONTENT
+========================================================= -->
+
+<section class="dashboard-grid">
+
+
+    <!-- =====================================================
+         LEFT CARD
+    ====================================================== -->
+
+    <article class="card care-card">
+
+        <div class="care-card-header">
+
+            <div class="care-icon">
                 ♡
             </div>
 
-            <h2>
-                Quick actions
-            </h2>
+            <div>
 
-            <div class="quick-links">
+                <div class="eyebrow">
+                    A LITTLE CARE
+                </div>
 
-                <a class="quick-link" href="period-log.php">
+                <h2>
+                    Take care of you.
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <p class="care-intro">
+
+            FemTrack gives you a simple space to keep track
+            of your period and how you're feeling.
+
+        </p>
+
+
+        <div class="care-list">
+
+
+            <div class="care-item">
+
+                <div class="care-item-icon">
+                    ♡
+                </div>
+
+                <div>
 
                     <strong>
-                        ＋ Log a period
+                        Track your period
                     </strong>
 
                     <span>
-                        Add a new cycle record
+                        Keep your period dates organized.
                     </span>
 
-                </a>
+                </div>
+
+            </div>
 
 
-                <a class="quick-link" href="period-history.php">
+            <div class="care-item">
+
+                <div class="care-item-icon">
+                    ✿
+                </div>
+
+                <div>
+
+                    <strong>
+                        Notice how you feel
+                    </strong>
+
+                    <span>
+                        Record symptoms throughout your cycle.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="care-item">
+
+                <div class="care-item-icon">
+                    ♡
+                </div>
+
+                <div>
+
+                    <strong>
+                        Keep your records
+                    </strong>
+
+                    <span>
+                        Find your information whenever you need it.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="care-message">
+            Your health. Your records. Your space. ♡
+        </div>
+
+    </article>
+
+
+
+    <!-- =====================================================
+         QUICK ACTIONS
+    ====================================================== -->
+
+    <article class="card action-card">
+
+        <div class="card-icon">
+            ♡
+        </div>
+
+        <h2>
+            Quick actions
+        </h2>
+
+
+        <div class="quick-links">
+
+
+            <!-- LOG PERIOD -->
+
+            <a
+                class="quick-link"
+                href="period-log.php"
+            >
+
+                <strong>
+                    ＋ Log a period
+                </strong>
+
+                <span>
+                    Add a new cycle record
+                </span>
+
+            </a>
+
+
+            <?php if ($hasPeriodHistory): ?>
+
+                <!-- VIEW HISTORY ONLY AFTER FIRST PERIOD IS LOGGED -->
+
+                <a
+                    class="quick-link"
+                    href="period-history.php"
+                >
 
                     <strong>
                         ♡ View history
@@ -477,78 +906,110 @@ if (!$user) {
 
                 </a>
 
+            <?php endif; ?>
 
-                <a class="quick-link" href="track-symptoms.php">
 
-                    <strong>
-                        ✿ Track symptoms
-                    </strong>
+            <!-- TRACK SYMPTOMS -->
 
-                    <span>
-                        Record how you're feeling
+            <a
+                class="quick-link"
+                href="track-symptoms.php"
+            >
+
+                <strong>
+                    ✿ Track symptoms
+                </strong>
+
+                <span>
+                    Record how you're feeling
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </article>
+
+
+
+    <!-- =====================================================
+         ACCOUNT
+    ====================================================== -->
+
+    <article class="card account-card">
+
+        <div class="card-icon">
+            ♔
+        </div>
+
+        <h2>
+            Your account
+        </h2>
+
+
+        <dl class="details">
+
+
+            <div>
+
+                <dt>
+                    Name
+                </dt>
+
+                <dd>
+
+                    <?php
+                    echo htmlspecialchars($user["name"]);
+                    ?>
+
+                </dd>
+
+            </div>
+
+
+            <div>
+
+                <dt>
+                    Email
+                </dt>
+
+                <dd>
+
+                    <?php
+                    echo htmlspecialchars($user["email"]);
+                    ?>
+
+                </dd>
+
+            </div>
+
+
+            <div>
+
+                <dt>
+                    Account type
+                </dt>
+
+                <dd>
+
+                    <span class="member-badge">
+                        Member ♡
                     </span>
 
-                </a>
+                </dd>
 
             </div>
 
-        </article>
+
+        </dl>
+
+    </article>
 
 
-        <article class="card">
-
-            <div class="card-icon">
-                ♔
-            </div>
-
-            <h2>
-                Your account
-            </h2>
-
-            <dl class="details">
-
-                <div>
-
-                    <dt>Name</dt>
-
-                    <dd>
-                        <?php echo htmlspecialchars($user["name"]); ?>
-                    </dd>
-
-                </div>
+</section>
 
 
-                <div>
-
-                    <dt>Email</dt>
-
-                    <dd>
-                        <?php echo htmlspecialchars($user["email"]); ?>
-                    </dd>
-
-                </div>
-
-
-                <div>
-
-                    <dt>Account type</dt>
-
-                    <dd>
-                        <span class="member-badge">
-                            Member ♡
-                        </span>
-                    </dd>
-
-                </div>
-
-            </dl>
-
-        </article>
-
-
-    </section>
-
-</main>
 
 </body>
 
