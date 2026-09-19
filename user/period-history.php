@@ -4,12 +4,15 @@ session_start();
 
 require_once __DIR__ . "/../config/database.php";
 
+
 /* =========================================================
    CHECK LOGIN
 ========================================================= */
 
 if (!isset($_SESSION["user_id"])) {
+
     $_SESSION["redirect_after_login"] = "user/period-history.php";
+
     header("Location: ../login.php");
     exit;
 }
@@ -22,14 +25,18 @@ $user_id = $_SESSION["user_id"];
 ========================================================= */
 
 $stmt = mysqli_prepare(
+
     $conn,
+
     "SELECT id, start_date, end_date, flow_intensity, created_at
      FROM period_logs
      WHERE user_id = ?
      ORDER BY start_date DESC"
+
 );
 
 mysqli_stmt_bind_param($stmt, "i", $user_id);
+
 mysqli_stmt_execute($stmt);
 
 $result = mysqli_stmt_get_result($stmt);
@@ -37,6 +44,7 @@ $result = mysqli_stmt_get_result($stmt);
 ?>
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -51,7 +59,11 @@ $result = mysqli_stmt_get_result($stmt);
     <title>Period History | FemTrack</title>
 
     <!-- Main FemTrack stylesheet -->
-    <link rel="stylesheet" href="../css/style.css">
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
 
     <style>
 
@@ -63,7 +75,9 @@ $result = mysqli_stmt_get_result($stmt);
             box-sizing: border-box;
         }
 
+
         body {
+
             margin: 0;
 
             background:
@@ -227,7 +241,9 @@ $result = mysqli_stmt_get_result($stmt);
             position: absolute;
 
             top: 0;
+
             left: 0;
+
             right: 0;
 
             height: 5px;
@@ -352,6 +368,10 @@ $result = mysqli_stmt_get_result($stmt);
             width: 100%;
 
             overflow-x: auto;
+
+            -webkit-overflow-scrolling: touch;
+
+            border-radius: 12px;
         }
 
 
@@ -384,6 +404,8 @@ $result = mysqli_stmt_get_result($stmt);
             text-align: left;
 
             border-bottom: 1px solid #f4dce6;
+
+            white-space: nowrap;
         }
 
 
@@ -398,6 +420,8 @@ $result = mysqli_stmt_get_result($stmt);
             border-bottom: 1px solid #f5e3ea;
 
             vertical-align: middle;
+
+            white-space: nowrap;
         }
 
 
@@ -540,6 +564,32 @@ $result = mysqli_stmt_get_result($stmt);
 
 
         /* =========================================================
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .history-page {
+
+                padding: 45px 20px 65px;
+            }
+
+
+            .history-card {
+
+                padding: 25px;
+            }
+
+
+            .page-heading {
+
+                margin-bottom: 30px;
+            }
+
+        }
+
+
+        /* =========================================================
            MOBILE
         ========================================================= */
 
@@ -547,23 +597,49 @@ $result = mysqli_stmt_get_result($stmt);
 
             .history-page {
 
+                width: 100%;
+
                 padding: 35px 15px 60px;
+            }
+
+
+            .page-heading {
+
+                margin-bottom: 25px;
             }
 
 
             .page-heading h1 {
 
                 font-size: 37px;
+
+                line-height: 1.1;
+
+                letter-spacing: -1px;
             }
 
 
             .heading-soft {
 
                 font-size: 17px;
+
+                line-height: 1.5;
+            }
+
+
+            .page-heading p {
+
+                margin-top: 14px;
+
+                font-size: 13px;
+
+                line-height: 1.7;
             }
 
 
             .history-card {
+
+                width: 100%;
 
                 padding: 20px 15px;
 
@@ -576,20 +652,320 @@ $result = mysqli_stmt_get_result($stmt);
                 flex-direction: column;
 
                 align-items: flex-start;
+
+                gap: 16px;
+
+                padding-bottom: 20px;
+
+                margin-bottom: 20px;
+            }
+
+
+            .history-header h2 {
+
+                font-size: 20px;
+            }
+
+
+            .history-header p {
+
+                font-size: 12px;
+
+                line-height: 1.6;
             }
 
 
             .log-button {
 
                 width: 100%;
+
+                min-height: 46px;
+
+                padding: 12px 16px;
+
+                font-size: 12px;
             }
 
 
             .table-wrap {
 
-                margin-left: -2px;
+                width: 100%;
 
-                margin-right: -2px;
+                margin: 0;
+
+                padding-bottom: 4px;
+
+                overflow-x: auto;
+            }
+
+
+            table {
+
+                min-width: 650px;
+            }
+
+
+            thead th {
+
+                padding: 13px 11px;
+
+                font-size: 10px;
+            }
+
+
+            tbody td {
+
+                padding: 14px 11px;
+
+                font-size: 12px;
+            }
+
+
+            .flow-tag {
+
+                padding: 5px 10px;
+
+                font-size: 10px;
+            }
+
+
+            .edit-link {
+
+                font-size: 11px;
+            }
+
+
+            .empty-state {
+
+                padding: 45px 12px;
+            }
+
+
+            .empty-icon {
+
+                width: 58px;
+
+                height: 58px;
+
+                margin-bottom: 17px;
+
+                border-radius: 18px;
+
+                font-size: 25px;
+            }
+
+
+            .empty-state h2 {
+
+                font-size: 23px;
+            }
+
+
+            .empty-state p {
+
+                font-size: 12px;
+
+                line-height: 1.7;
+            }
+
+        }
+
+
+        /* =========================================================
+           SMALL PHONES
+        ========================================================= */
+
+        @media (max-width: 480px) {
+
+            .history-page {
+
+                padding: 25px 12px 50px;
+            }
+
+
+            .page-eyebrow {
+
+                padding: 7px 11px;
+
+                margin-bottom: 12px;
+
+                font-size: 9px;
+
+                letter-spacing: 1.4px;
+            }
+
+
+            .page-heading h1 {
+
+                font-size: 31px;
+
+                letter-spacing: -.7px;
+            }
+
+
+            .heading-soft {
+
+                margin-top: 8px;
+
+                font-size: 15px;
+            }
+
+
+            .page-heading p {
+
+                font-size: 12px;
+
+                line-height: 1.65;
+            }
+
+
+            .history-card {
+
+                padding: 18px 12px;
+
+                border-radius: 19px;
+            }
+
+
+            .history-header {
+
+                gap: 14px;
+
+                padding-bottom: 18px;
+
+                margin-bottom: 18px;
+            }
+
+
+            .history-header h2 {
+
+                font-size: 18px;
+            }
+
+
+            .history-header p {
+
+                font-size: 11px;
+            }
+
+
+            .log-button {
+
+                min-height: 44px;
+
+                font-size: 11px;
+
+                border-radius: 12px;
+            }
+
+
+            table {
+
+                min-width: 620px;
+            }
+
+
+            thead th {
+
+                padding: 12px 9px;
+
+                font-size: 9px;
+            }
+
+
+            tbody td {
+
+                padding: 13px 9px;
+
+                font-size: 11px;
+            }
+
+
+            .flow-tag {
+
+                padding: 5px 9px;
+
+                font-size: 9px;
+            }
+
+
+            .edit-link {
+
+                font-size: 10px;
+            }
+
+
+            .empty-state {
+
+                padding: 38px 8px;
+            }
+
+
+            .empty-state h2 {
+
+                font-size: 21px;
+            }
+
+
+            .empty-state p {
+
+                font-size: 11px;
+            }
+
+        }
+
+
+        /* =========================================================
+           VERY SMALL PHONES
+        ========================================================= */
+
+        @media (max-width: 360px) {
+
+            .history-page {
+
+                padding-left: 8px;
+
+                padding-right: 8px;
+            }
+
+
+            .page-heading h1 {
+
+                font-size: 28px;
+            }
+
+
+            .heading-soft {
+
+                font-size: 14px;
+            }
+
+
+            .history-card {
+
+                padding: 16px 10px;
+
+                border-radius: 18px;
+            }
+
+
+            .history-header h2 {
+
+                font-size: 17px;
+            }
+
+
+            table {
+
+                min-width: 600px;
+            }
+
+
+            .empty-state {
+
+                padding-left: 5px;
+
+                padding-right: 5px;
             }
 
         }
@@ -603,74 +979,10 @@ $result = mysqli_stmt_get_result($stmt);
 
 
 <!-- =========================================================
-     SAME NAVIGATION AS TRACK-SYMPTOMS.PHP
+     SHARED FEMTRACK NAVIGATION
 ========================================================= -->
 
-<nav class="home-nav" aria-label="Main navigation">
-
-    <a
-        class="home-logo"
-        href="../index.php"
-        aria-label="FemTrack home"
-    >
-
-        <img
-            src="../assets/femtrack-mark.jpeg"
-            alt=""
-        >
-
-        <span>
-            Fem<span>Track</span>
-        </span>
-
-    </a>
-
-
-    <div class="home-nav-links app-nav-links">
-
-        <a href="../index.php">
-            Home
-        </a>
-
-
-        <a href="dashboard.php">
-            Dashboard
-        </a>
-
-
-        <a href="track-symptoms.php">
-            Track Symptoms
-        </a>
-
-
-        <a
-            class="active"
-            href="period-history.php"
-        >
-            History
-        </a>
-
-
-        <a href="reports.php">
-            Reports
-        </a>
-
-
-        <a href="../about.php">
-            About Us
-        </a>
-
-
-        <a
-            class="nav-logout"
-            href="../logout.php"
-        >
-            Logout
-        </a>
-
-    </div>
-
-</nav>
+<?php include "../includes/nav.php"; ?>
 
 
 
@@ -686,23 +998,31 @@ $result = mysqli_stmt_get_result($stmt);
     <div class="page-heading">
 
         <div class="page-eyebrow">
+
             Your cycle records ♡
+
         </div>
 
 
         <h1>
+
             Period History
+
         </h1>
 
 
         <span class="heading-soft">
+
             Your cycle, your records, your little timeline.
+
         </span>
 
 
         <p>
+
             Keep track of the periods you've logged and look back
             at your cycle information whenever you need it.
+
         </p>
 
     </div>
@@ -721,11 +1041,15 @@ $result = mysqli_stmt_get_result($stmt);
             <div>
 
                 <h2>
+
                     Your Period Records ♡
+
                 </h2>
 
                 <p>
+
                     A simple view of the periods you have logged.
+
                 </p>
 
             </div>
@@ -735,7 +1059,9 @@ $result = mysqli_stmt_get_result($stmt);
                 class="log-button"
                 href="period-log.php"
             >
+
                 + Log New Period
+
             </a>
 
         </div>
@@ -795,27 +1121,39 @@ $result = mysqli_stmt_get_result($stmt);
 
 
                                 <td>
+
                                     <?php
+
                                     echo $count++;
+
                                     ?>
+
                                 </td>
 
 
                                 <td>
+
                                     <?php
+
                                     echo htmlspecialchars(
                                         $period["start_date"]
                                     );
+
                                     ?>
+
                                 </td>
 
 
                                 <td>
+
                                     <?php
+
                                     echo htmlspecialchars(
                                         $period["end_date"]
                                     );
+
                                     ?>
+
                                 </td>
 
 
@@ -824,11 +1162,13 @@ $result = mysqli_stmt_get_result($stmt);
                                     <span class="flow-tag">
 
                                         <?php
+
                                         echo htmlspecialchars(
                                             ucfirst(
                                                 $period["flow_intensity"]
                                             )
                                         );
+
                                         ?>
 
                                     </span>
@@ -837,11 +1177,15 @@ $result = mysqli_stmt_get_result($stmt);
 
 
                                 <td>
+
                                     <?php
+
                                     echo htmlspecialchars(
                                         $period["created_at"]
                                     );
+
                                     ?>
+
                                 </td>
 
 
@@ -851,7 +1195,9 @@ $result = mysqli_stmt_get_result($stmt);
                                         class="edit-link"
                                         href="edit-period.php?id=<?php echo $period['id']; ?>"
                                     >
+
                                         Edit
+
                                     </a>
 
                                 </td>
@@ -876,18 +1222,24 @@ $result = mysqli_stmt_get_result($stmt);
             <div class="empty-state">
 
                 <div class="empty-icon">
+
                     ♡
+
                 </div>
 
 
                 <h2>
+
                     No Period Records Yet
+
                 </h2>
 
 
                 <p>
+
                     When you log your first period, your cycle
                     history will appear here.
+
                 </p>
 
 
@@ -895,7 +1247,9 @@ $result = mysqli_stmt_get_result($stmt);
                     class="log-button"
                     href="period-log.php"
                 >
+
                     Log Your First Period
+
                 </a>
 
             </div>
@@ -908,6 +1262,7 @@ $result = mysqli_stmt_get_result($stmt);
 
 
 </main>
+
 
 
 </body>

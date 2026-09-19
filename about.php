@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 ?>
@@ -40,40 +39,46 @@ session_start();
             border-bottom: 1px solid #f3dce7;
             box-shadow: 0 4px 20px rgba(100,40,70,0.06);
         }
+
         .about-page .logo {
-    color: #3d1934;
-    font-size: 1.2rem;
-    font-weight: 900;
-    letter-spacing: -.04em;
-    text-decoration: none;
-}
+            color: #3d1934;
+            font-size: 1.2rem;
+            font-weight: 900;
+            letter-spacing: -.04em;
+            text-decoration: none;
+        }
 
-.about-page .logo > span > span {
-    color: #d75b93;
-}
+        .about-page .logo > span > span {
+            color: #d75b93;
+        }
 
-.about-page .logo:hover {
-    color: #3d1934;
-    text-decoration: none;
-}
+        .about-page .logo:hover {
+            color: #3d1934;
+            text-decoration: none;
+        }
 
-.about-page .nav a {
-    color: #70485b;
-    transition: .3s;
-}
+        .about-page .nav a {
+            color: #70485b;
+            transition: .3s;
+        }
 
-.about-page .nav a:hover,
-.about-page .nav a.active {
-    color: #c64e86;
-    background: transparent;
-}
+        .about-page .nav a:hover,
+        .about-page .nav a.active {
+            color: #c64e86;
+            background: transparent;
+        }
 
-.about-page .nav .logout {
-    background: #401c38;
-    color: white;
-}
+        .about-page .nav .logout {
+            background: #401c38;
+            color: white;
+        }
 
-   
+
+        /* ---------- MOBILE MENU BUTTON ---------- */
+
+        .mobile-about-toggle {
+            display: none;
+        }
 
 
         /* ---------- MAIN ---------- */
@@ -601,43 +606,36 @@ session_start();
         }
 
 
-        /* ---------- MOBILE ---------- */
+        /* =========================================
+           RESPONSIVE DESIGN
+        ========================================= */
 
-        @media (max-width: 850px) {
+        /* ---------- TABLET ---------- */
 
-            .about-page .topbar {
-                flex-direction: column;
-
-                gap: 15px;
-            }
-
-            .about-page .nav {
-                flex-wrap: wrap;
-
-                justify-content: center;
-            }
+        @media (max-width: 1000px) {
 
             .about-content {
-                padding: 35px 18px 60px;
+                padding: 45px 25px 70px;
             }
 
             .about-hero {
-                min-height: 420px;
-
-                padding: 55px 20px;
+                min-height: 440px;
+                padding: 60px 25px;
             }
 
-            .about-hero::before {
-                left: 15px;
-                top: 20px;
-            }
-
-            .about-hero::after {
-                right: 15px;
+            .about-hero h1 {
+                font-size: clamp(40px, 7vw, 60px);
             }
 
             .values {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .value-card:last-child {
+                grid-column: 1 / -1;
+                max-width: 500px;
+                width: 100%;
+                margin: 0 auto;
             }
 
             .story {
@@ -645,23 +643,581 @@ session_start();
             }
 
             .story-image {
-                min-height: 280px;
+                min-height: 300px;
             }
 
             .story-text {
-                padding: 35px;
+                padding: 40px;
+            }
+
+        }
+
+
+        /* ---------- MOBILE NAVBAR ---------- */
+
+        @media (max-width: 850px) {
+
+            /* NAVBAR */
+
+            .about-page .topbar {
+                position: relative;
+
+                display: flex;
+                flex-direction: row;
+
+                align-items: center;
+                justify-content: space-between;
+
+                width: 100%;
+
+                padding: 12px 16px;
+
+                gap: 0;
+            }
+
+
+            .about-page .logo {
+                display: flex;
+
+                align-items: center;
+
+                gap: 8px;
+
+                flex-shrink: 0;
+            }
+
+
+            .about-page .logo-mark {
+                width: 38px;
+                height: 38px;
+
+                object-fit: cover;
+
+                border-radius: 10px;
+
+                display: block;
+            }
+
+
+            .about-page .logo > span {
+                font-size: 20px;
+
+                white-space: nowrap;
+            }
+
+
+            /* HAMBURGER */
+
+            .mobile-about-toggle {
+                display: flex;
+
+                width: 42px;
+                height: 42px;
+
+                margin-left: auto;
+
+                padding: 0;
+
+                border: none;
+
+                background: transparent;
+
+                align-items: center;
+                justify-content: center;
+
+                flex-direction: column;
+
+                gap: 5px;
+
+                cursor: pointer;
+
+                z-index: 1002;
+            }
+
+
+            .mobile-about-toggle span {
+                display: block;
+
+                width: 24px;
+                height: 2px;
+
+                background: #401c38;
+
+                border-radius: 5px;
+
+                transition:
+                    transform .25s ease,
+                    opacity .25s ease;
+            }
+
+
+            /* HAMBURGER -> X */
+
+            .mobile-about-toggle.menu-open span:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+
+            .mobile-about-toggle.menu-open span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .mobile-about-toggle.menu-open span:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
+            }
+
+
+            /* MOBILE DROPDOWN */
+
+            .about-page .nav {
+                display: none;
+
+                position: absolute;
+
+                top: calc(100% + 8px);
+
+                right: 12px;
+
+                width: 225px;
+
+                padding: 8px;
+
+                flex-direction: column;
+
+                gap: 3px;
+
+                background: rgba(255,255,255,.98);
+
+                border: 1px solid #f0dce5;
+
+                border-radius: 16px;
+
+                box-shadow:
+                    0 18px 40px rgba(100,40,70,.14);
+
+                z-index: 1001;
+            }
+
+
+            .about-page .nav.about-mobile-open {
+                display: flex;
+            }
+
+
+            .about-page .nav a {
+                display: block;
+
+                width: 100%;
+
+                padding: 11px 13px;
+
+                border-radius: 10px;
+
+                font-size: 13px;
+
+                line-height: 1.2;
+
+                text-align: left;
+
+                white-space: nowrap;
+
+                text-decoration: none;
+            }
+
+
+            .about-page .nav a:hover {
+                background: #fff0f6;
+
+                color: #c64e86;
+            }
+
+
+            .about-page .nav a.active {
+                background: #fde5ef;
+
+                color: #c64e86;
+            }
+
+
+            .about-page .nav .logout {
+                margin-top: 4px;
+
+                background: #401c38;
+
+                color: white;
+
+                text-align: center;
+            }
+
+
+            .about-page .nav .logout:hover {
+                background: #542548;
+
+                color: white;
+            }
+
+
+            /* MAIN */
+
+            .about-content {
+                width: 100%;
+                padding: 30px 16px 55px;
+            }
+
+
+            /* HERO */
+
+            .about-hero {
+                min-height: 400px;
+                padding: 50px 20px;
+                border-radius: 30px;
+            }
+
+            .about-hero::before {
+                left: 10px;
+                top: 15px;
+                font-size: 55px;
+            }
+
+            .about-hero::after {
+                right: 10px;
+                bottom: 15px;
+                font-size: 60px;
+            }
+
+            .hero-content {
+                width: 100%;
+            }
+
+            .hero-small {
+                font-size: 10px;
+                letter-spacing: 2.5px;
+                margin-bottom: 15px;
+            }
+
+            .about-hero h1 {
+                font-size: clamp(36px, 11vw, 50px);
+                line-height: 1.1;
+            }
+
+            .hero-line {
+                width: 55px;
+                margin: 20px auto;
+            }
+
+            .about-hero p {
+                font-size: 15px;
+                line-height: 1.7;
+            }
+
+
+            /* INTRO */
+
+            .intro {
+                margin: 55px auto 35px;
+            }
+
+            .section-label {
+                font-size: 10px;
+                letter-spacing: 2px;
+            }
+
+            .intro h2 {
+                font-size: 30px;
+                line-height: 1.25;
+            }
+
+            .intro p {
+                font-size: 14px;
+                line-height: 1.7;
+            }
+
+
+            /* VALUES */
+
+            .values {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .value-card:last-child {
+                max-width: none;
+            }
+
+            .value-card {
+                padding: 30px 25px;
+                border-radius: 24px;
+            }
+
+            .value-icon {
+                width: 58px;
+                height: 58px;
+                font-size: 24px;
+                margin-bottom: 18px;
+            }
+
+            .value-card h3 {
+                font-size: 20px;
+            }
+
+            .value-card p {
+                font-size: 14px;
+            }
+
+
+            /* STORY */
+
+            .story {
+                grid-template-columns: 1fr;
+                gap: 18px;
+                margin-top: 50px;
+            }
+
+            .story-image {
+                min-height: 250px;
+                border-radius: 28px;
+            }
+
+            .story-flower {
+                font-size: 85px;
+            }
+
+            .story-image::before {
+                left: 20px;
+                top: 15px;
+                font-size: 55px;
+            }
+
+            .story-image::after {
+                right: 20px;
+                bottom: 10px;
+                font-size: 60px;
+            }
+
+            .story-text {
+                padding: 30px 25px;
+                border-radius: 28px;
+            }
+
+            .story-text h2 {
+                font-size: 30px;
+            }
+
+            .story-text p {
+                font-size: 14px;
+                line-height: 1.75;
+            }
+
+
+            /* QUOTE */
+
+            .quote {
+                margin-top: 50px;
+                padding: 45px 22px;
+                border-radius: 28px;
+            }
+
+            .quote::before {
+                left: 5px;
+                top: -25px;
+                font-size: 130px;
             }
 
             .quote p {
-                font-size: 22px;
+                font-size: 21px;
+                line-height: 1.45;
             }
 
+            .quote span {
+                font-size: 10px;
+                letter-spacing: 2px;
+            }
+
+
+            /* CTA */
+
             .about-note {
+                margin-top: 25px;
+                padding: 30px 22px;
+                border-radius: 25px;
+
                 flex-direction: column;
-
                 text-align: center;
+                gap: 20px;
+            }
 
-                padding: 35px 25px;
+            .about-note h2 {
+                font-size: 24px;
+                line-height: 1.3;
+            }
+
+            .about-button {
+                padding: 13px 22px;
+                font-size: 13px;
+            }
+
+
+            /* FOOTER */
+
+            .about-footer {
+                margin-top: 28px;
+                font-size: 12px;
+                line-height: 1.6;
+                padding: 0 10px;
+            }
+
+        }
+
+
+        /* ---------- SMALL PHONES ---------- */
+
+        @media (max-width: 480px) {
+
+            /* NAVBAR */
+
+            .about-page .topbar {
+                padding: 10px 12px;
+            }
+
+
+            .about-page .logo-mark {
+                width: 34px;
+                height: 34px;
+
+                border-radius: 9px;
+            }
+
+
+            .about-page .logo > span {
+                font-size: 19px;
+            }
+
+
+            .mobile-about-toggle {
+                width: 40px;
+                height: 40px;
+            }
+
+
+            .mobile-about-toggle span {
+                width: 23px;
+            }
+
+
+            .about-page .nav {
+                right: 10px;
+
+                width: 210px;
+
+                border-radius: 15px;
+            }
+
+
+            .about-page .nav a {
+                font-size: 12px;
+
+                padding: 11px 12px;
+            }
+
+
+            /* MAIN */
+
+            .about-content {
+                padding: 22px 12px 45px;
+            }
+
+
+            /* HERO */
+
+            .about-hero {
+                min-height: 360px;
+                padding: 40px 16px;
+                border-radius: 24px;
+            }
+
+            .about-hero::before {
+                font-size: 45px;
+                left: 5px;
+                top: 10px;
+            }
+
+            .about-hero::after {
+                font-size: 50px;
+                right: 5px;
+                bottom: 10px;
+            }
+
+            .hero-small {
+                font-size: 9px;
+                letter-spacing: 2px;
+            }
+
+            .about-hero h1 {
+                font-size: 34px;
+            }
+
+            .about-hero p {
+                font-size: 14px;
+            }
+
+
+            /* INTRO */
+
+            .intro {
+                margin: 45px auto 30px;
+            }
+
+            .intro h2 {
+                font-size: 27px;
+            }
+
+
+            /* CARDS */
+
+            .value-card {
+                padding: 27px 20px;
+                border-radius: 22px;
+            }
+
+
+            /* STORY */
+
+            .story {
+                margin-top: 40px;
+            }
+
+            .story-image {
+                min-height: 220px;
+            }
+
+            .story-text {
+                padding: 27px 20px;
+            }
+
+            .story-text h2 {
+                font-size: 27px;
+            }
+
+
+            /* QUOTE */
+
+            .quote {
+                padding: 38px 18px;
+                border-radius: 24px;
+            }
+
+            .quote p {
+                font-size: 19px;
+            }
+
+
+            /* CTA */
+
+            .about-note {
+                padding: 27px 18px;
+            }
+
+            .about-note h2 {
+                font-size: 22px;
             }
 
         }
@@ -678,24 +1234,41 @@ session_start();
 
 <nav class="topbar">
 
-<a class="logo" href="index.php">
+    <a class="logo" href="index.php">
 
-    <img
-        class="logo-mark"
-        src="assets/femtrack-mark.jpeg"
-        alt="FemTrack"
+        <img
+            class="logo-mark"
+            src="assets/femtrack-mark.jpeg"
+            alt="FemTrack"
+        >
+
+        <span>Fem<span>Track</span></span>
+
+    </a>
+
+
+    <!-- MOBILE HAMBURGER -->
+
+    <button
+        class="mobile-about-toggle"
+        id="aboutMobileNavToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="aboutMobileNav"
     >
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-    <span>Fem<span>Track</span></span>
 
-</a>
-
-
-    <div class="nav">
+    <div class="nav" id="aboutMobileNav">
 
         <a href="index.php">
             Home
         </a>
+
 
         <?php if (isset($_SESSION['user_id'])): ?>
 
@@ -954,13 +1527,132 @@ session_start();
 
 <div class="about-footer">
 
-     ~Made with <b>♡</b> for women who deserve
+    ~Made with <b>♡</b> for women who deserve
     a little more care.~
 
 </div>
 
 
 </main>
+
+
+<!-- ================= MOBILE NAV SCRIPT ================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const menuButton = document.getElementById("aboutMobileNavToggle");
+    const navigation = document.getElementById("aboutMobileNav");
+
+    if (!menuButton || !navigation) {
+        return;
+    }
+
+
+    /* OPEN / CLOSE MENU */
+
+    menuButton.addEventListener("click", function () {
+
+        const isOpen =
+            navigation.classList.toggle("about-mobile-open");
+
+        menuButton.classList.toggle("menu-open", isOpen);
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            isOpen ? "true" : "false"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            isOpen ? "Close navigation menu" : "Open navigation menu"
+        );
+
+    });
+
+
+    /* CLOSE MENU AFTER CLICKING A LINK */
+
+    navigation.querySelectorAll("a").forEach(function (link) {
+
+        link.addEventListener("click", function () {
+
+            navigation.classList.remove("about-mobile-open");
+
+            menuButton.classList.remove("menu-open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+
+        });
+
+    });
+
+
+    /* CLOSE MENU WHEN CLICKING OUTSIDE */
+
+    document.addEventListener("click", function (event) {
+
+        if (
+            !navigation.contains(event.target) &&
+            !menuButton.contains(event.target)
+        ) {
+
+            navigation.classList.remove("about-mobile-open");
+
+            menuButton.classList.remove("menu-open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+
+        }
+
+    });
+
+
+    /* RESET MOBILE MENU WHEN RETURNING TO DESKTOP */
+
+    window.addEventListener("resize", function () {
+
+        if (window.innerWidth > 850) {
+
+            navigation.classList.remove("about-mobile-open");
+
+            menuButton.classList.remove("menu-open");
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            menuButton.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+
+        }
+
+    });
+
+});
+
+</script>
+
 
 </body>
 

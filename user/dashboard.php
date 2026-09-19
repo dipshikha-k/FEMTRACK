@@ -54,13 +54,6 @@ if (!$user) {
 |--------------------------------------------------------------------------
 | CHECK IF USER HAS PERIOD HISTORY
 |--------------------------------------------------------------------------
-|
-| New user:
-| 0 period records → View History will NOT appear.
-|
-| Existing user:
-| 1 or more period records → View History will appear.
-|
 */
 
 $hasPeriodHistory = false;
@@ -90,11 +83,16 @@ if ($periodData && $periodData["total"] > 0) {
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Dashboard - FemTrack</title>
 
     <link rel="stylesheet" href="../css/style.css">
+
 
     <style>
 
@@ -564,7 +562,13 @@ if ($periodData && $periodData["total"] > 0) {
 
 
         /* =========================================================
-           MOBILE
+           RESPONSIVE DESIGN
+           Desktop remains unchanged
+        ========================================================= */
+
+
+        /* =========================================================
+           TABLET
         ========================================================= */
 
         @media (max-width: 1100px) {
@@ -580,35 +584,38 @@ if ($periodData && $periodData["total"] > 0) {
         }
 
 
+        /* =========================================================
+           TABLET / SMALL LAPTOP
+        ========================================================= */
+
         @media (max-width: 900px) {
-
-            .topbar {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .nav {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
 
             .hero {
                 margin: 25px 4%;
                 padding: 30px;
+                gap: 20px;
             }
 
             .hero h1 {
                 font-size: 30px;
+                line-height: 1.2;
+            }
+
+            .lead {
+                font-size: 14px;
+                line-height: 1.6;
             }
 
             .hero-decoration {
-                display: none;
+                font-size: 55px;
             }
 
             .dashboard-grid {
                 margin: 25px 4% 45px;
 
                 grid-template-columns: 1fr;
+
+                gap: 18px;
             }
 
             .care-card {
@@ -618,20 +625,283 @@ if ($periodData && $periodData["total"] > 0) {
         }
 
 
-        @media (max-width: 500px) {
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 600px) {
+
+            /* HERO */
 
             .hero {
-                padding: 25px 20px;
+                margin: 20px 12px;
+
+                padding: 27px 20px;
+
+                border-radius: 25px;
+
+                display: block;
+
+                text-align: center;
+            }
+
+            .eyebrow {
+                font-size: 10px;
+
+                letter-spacing: 1.5px;
             }
 
             .hero h1 {
                 font-size: 27px;
+
+                line-height: 1.3;
+
+                margin: 9px 0;
             }
+
+            .lead {
+                font-size: 13px;
+
+                line-height: 1.7;
+            }
+
+            .hero-decoration {
+                display: block;
+
+                font-size: 42px;
+
+                margin-top: 15px;
+            }
+
+
+            /* DASHBOARD GRID */
+
+            .dashboard-grid {
+                margin: 20px 12px 40px;
+
+                gap: 16px;
+            }
+
+
+            /* GENERAL CARDS */
+
+            .card {
+                border-radius: 22px;
+            }
+
+            .card h2 {
+                font-size: 22px;
+            }
+
+
+            /* CARE CARD */
+
+            .care-card {
+                min-height: auto;
+
+                padding: 24px 20px;
+            }
+
+            .care-card-header {
+                gap: 10px;
+
+                align-items: center;
+            }
+
+            .care-icon {
+                width: 40px;
+                height: 40px;
+
+                font-size: 18px;
+
+                flex-shrink: 0;
+            }
+
+            .care-card h2 {
+                font-size: 23px;
+            }
+
+            .care-intro {
+                font-size: 13px;
+
+                line-height: 1.7;
+
+                margin-bottom: 18px;
+            }
+
+
+            /* CARE ITEMS */
+
+            .care-list {
+                gap: 9px;
+            }
+
+            .care-item {
+                padding: 11px 12px;
+
+                gap: 10px;
+            }
+
+            .care-item-icon {
+                width: 32px;
+                height: 32px;
+
+                font-size: 14px;
+
+                flex-shrink: 0;
+            }
+
+            .care-item strong {
+                font-size: 12px;
+            }
+
+            .care-item span {
+                font-size: 10px;
+
+                line-height: 1.4;
+            }
+
+            .care-message {
+                font-size: 11px;
+
+                line-height: 1.5;
+
+                margin-top: 17px;
+            }
+
+
+            /* QUICK ACTIONS */
+
+            .action-card {
+                padding: 24px 20px;
+            }
+
+            .quick-links {
+                gap: 10px;
+
+                margin-top: 15px;
+            }
+
+            .quick-link {
+                padding: 14px;
+
+                border-radius: 14px;
+            }
+
+            .quick-link strong {
+                font-size: 13px;
+            }
+
+            .quick-link span {
+                font-size: 11px;
+
+                line-height: 1.5;
+            }
+
+
+            /* ACCOUNT */
+
+            .account-card {
+                padding: 24px 20px;
+            }
+
+            .details {
+                gap: 12px;
+
+                margin-top: 17px;
+            }
+
+            .details div {
+                padding: 11px 0;
+            }
+
+            .details dt {
+                font-size: 10px;
+            }
+
+            .details dd {
+                font-size: 12px;
+
+                overflow-wrap: anywhere;
+            }
+
+            .member-badge {
+                padding: 5px 10px;
+
+                font-size: 11px;
+            }
+
+
+            /* CARD ICON */
+
+            .card-icon {
+                width: 40px;
+                height: 40px;
+
+                font-size: 18px;
+
+                margin-bottom: 12px;
+            }
+
+        }
+
+
+        /* =========================================================
+           SMALL PHONES
+        ========================================================= */
+
+        @media (max-width: 400px) {
+
+            .hero {
+                margin: 16px 8px;
+
+                padding: 23px 16px;
+            }
+
+            .hero h1 {
+                font-size: 24px;
+            }
+
+            .lead {
+                font-size: 12px;
+            }
+
+            .hero-decoration {
+                font-size: 36px;
+            }
+
+
+            /* DASHBOARD */
+
+            .dashboard-grid {
+                margin: 16px 8px 35px;
+
+                gap: 14px;
+            }
+
+
+            /* CARDS */
 
             .care-card,
             .action-card,
             .account-card {
-                padding: 23px;
+                padding: 21px 17px;
+            }
+
+            .care-card h2 {
+                font-size: 21px;
+            }
+
+            .card h2 {
+                font-size: 20px;
+            }
+
+            .care-item {
+                align-items: flex-start;
+            }
+
+            .care-item-icon {
+                margin-top: 1px;
             }
 
         }
@@ -648,56 +918,7 @@ if ($periodData && $periodData["total"] > 0) {
      NAVBAR
 ========================================================= -->
 
-<nav class="home-nav" aria-label="Main navigation">
-
-    <a
-        class="home-logo"
-        href="../index.php"
-        aria-label="FemTrack home"
-    >
-
-        <img
-            src="../assets/femtrack-mark.jpeg"
-            alt=""
-        >
-
-        <span>
-            Fem<span>Track</span>
-        </span>
-
-    </a>
-
-
-    <div class="home-nav-links app-nav-links">
-
-        <a href="../index.php">
-            Home
-        </a>
-
-        <a class="active" href="dashboard.php">
-            Dashboard
-        </a>
-
-        <a href="track-symptoms.php">
-            Track Symptoms
-        </a>
-
-        <a href="reports.php">
-            Reports
-        </a>
-
-        <a href="../about.php">
-            About Us
-        </a>
-
-        <a class="nav-logout" href="../logout.php">
-            Logout
-        </a>
-
-    </div>
-
-</nav>
-
+<?php include "../includes/nav.php"; ?>
 
 
 <!-- =========================================================
@@ -1008,7 +1229,6 @@ if ($periodData && $periodData["total"] > 0) {
 
 
 </section>
-
 
 
 </body>

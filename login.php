@@ -1,3 +1,4 @@
+
 <?php
 
 session_start();
@@ -8,9 +9,6 @@ require_once __DIR__ . "/config/database.php";
 /*
 |--------------------------------------------------------------------------
 | ALREADY LOGGED IN CHECK
-|--------------------------------------------------------------------------
-| If the user is already logged in, check their role and send them
-| to the correct dashboard.
 |--------------------------------------------------------------------------
 */
 
@@ -56,7 +54,7 @@ $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $email = trim($_POST["email"] ?? "");
+    $email = strtolower(trim($_POST["email"] ?? ""));
     $password = $_POST["password"] ?? "";
 
 
@@ -69,6 +67,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (empty($email) || empty($password)) {
 
         $message = "Please enter your email and password.";
+
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+        $message = "Please enter a valid email address.";
+
+    } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@gmail\.com$/', $email)) {
+
+        $message = "Please use a valid Gmail address ending with @gmail.com.";
+
+    } elseif (strlen($password) <= 6) {
+
+        $message = "Password must be more than 6 characters.";
 
     } else {
 
@@ -118,8 +128,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             |--------------------------------------------------------------------------
             | REGENERATE SESSION ID
             |--------------------------------------------------------------------------
-            | Helps protect the login session.
-            |--------------------------------------------------------------------------
             */
 
             session_regenerate_id(true);
@@ -144,6 +152,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if ($user["role"] === "admin") {
 
+                mysqli_stmt_close($stmt);
+
                 header("Location: user/admin.php");
                 exit;
             }
@@ -161,6 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             unset($_SESSION["redirect_after_login"]);
 
+            mysqli_stmt_close($stmt);
 
             header("Location: " . $redirect);
             exit;
@@ -247,7 +258,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <input
                     type="email"
                     name="email"
-                    placeholder="you@example.com"
+                    placeholder="you@gmail.com"
+                    value="<?php echo htmlspecialchars($email ?? ''); ?>"
                     required
                 >
 
@@ -262,6 +274,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="password"
                     name="password"
                     placeholder="Your password"
+                    minlength="7"
                     required
                 >
 

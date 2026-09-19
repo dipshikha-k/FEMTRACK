@@ -327,7 +327,9 @@ body {
 }
 
 
-/* FILTER */
+/* =========================================================
+   FILTER
+========================================================= */
 
 .period-filter {
     background: white;
@@ -607,6 +609,8 @@ body {
 
 .table-wrap {
     overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 table {
@@ -691,6 +695,8 @@ tr:last-child td {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    flex-shrink: 0;
 }
 
 .symptom-name {
@@ -707,6 +713,8 @@ tr:last-child td {
     color: #967482;
 
     font-size: 12px;
+
+    white-space: nowrap;
 }
 
 .severity-tag {
@@ -719,6 +727,8 @@ tr:last-child td {
     padding: 6px 11px;
 
     font-size: 11px;
+
+    white-space: nowrap;
 }
 
 
@@ -785,10 +795,238 @@ tr:last-child td {
 
 
 /* =========================================================
-   MOBILE
+   MOBILE NAVBAR
+   Desktop navbar stays EXACTLY the same
 ========================================================= */
 
-@media(max-width: 1050px) {
+.mobile-nav-toggle {
+    display: none;
+}
+
+
+@media (max-width: 768px) {
+
+    .topbar {
+        position: relative;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 12px 16px;
+
+        box-sizing: border-box;
+    }
+
+
+    /* -----------------------------------------------------
+       LOGO
+    ----------------------------------------------------- */
+
+    .topbar .logo {
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        text-decoration: none;
+
+        flex-shrink: 0;
+    }
+
+
+    .topbar .logo-mark {
+        width: 36px;
+        height: 36px;
+
+        border-radius: 10px;
+
+        object-fit: cover;
+    }
+
+
+    .topbar .logo > span {
+        font-size: 20px;
+
+        white-space: nowrap;
+    }
+
+
+    /* -----------------------------------------------------
+       HAMBURGER BUTTON
+    ----------------------------------------------------- */
+
+    .mobile-nav-toggle {
+        display: flex;
+
+        width: 42px;
+        height: 42px;
+
+        margin-left: auto;
+
+        padding: 8px;
+
+        border: none;
+
+        background: transparent;
+
+        border-radius: 10px;
+
+        align-items: center;
+        justify-content: center;
+
+        flex-direction: column;
+
+        gap: 5px;
+
+        cursor: pointer;
+
+        z-index: 1002;
+    }
+
+
+    .mobile-nav-toggle span {
+        width: 24px;
+        height: 2px;
+
+        background: #642b48;
+
+        border-radius: 5px;
+
+        transition: all 0.25s ease;
+    }
+
+
+    .mobile-nav-toggle:hover {
+        background: #fff0f6;
+    }
+
+
+    /* -----------------------------------------------------
+       DROPDOWN MENU
+    ----------------------------------------------------- */
+
+    .topbar .nav {
+        display: none;
+
+        position: absolute;
+
+        top: calc(100% + 8px);
+
+        right: 12px;
+
+        width: 225px;
+
+        padding: 8px;
+
+        box-sizing: border-box;
+
+        background: #ffffff;
+
+        border: 1px solid #f0dce5;
+
+        border-radius: 16px;
+
+        box-shadow:
+            0 12px 30px rgba(100, 43, 72, 0.14);
+
+        flex-direction: column;
+
+        gap: 3px;
+
+        z-index: 1001;
+    }
+
+
+    /* Show menu */
+
+    .topbar .nav.mobile-nav-open {
+        display: flex;
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE LINKS
+    ----------------------------------------------------- */
+
+    .topbar .nav a {
+        display: block;
+
+        width: 100%;
+
+        padding: 11px 13px;
+
+        box-sizing: border-box;
+
+        border-radius: 10px;
+
+        text-align: left;
+
+        font-size: 13px;
+
+        text-decoration: none;
+
+        white-space: nowrap;
+    }
+
+
+    .topbar .nav a:hover {
+        background: #fff0f6;
+    }
+
+
+    /* Active Reports */
+
+    .topbar .nav a.active {
+        background: #fde5ef;
+
+        color: #b74776;
+    }
+
+
+    /* Logout */
+
+    .topbar .nav a.logout {
+        margin-top: 4px;
+
+        border-top: 1px solid #f3e2e9;
+
+        border-radius: 0 0 10px 10px;
+
+        padding-top: 13px;
+    }
+
+
+    /* -----------------------------------------------------
+       HAMBURGER → X
+    ----------------------------------------------------- */
+
+    .mobile-nav-toggle.menu-open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .mobile-nav-toggle.menu-open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-nav-toggle.menu-open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+}
+
+
+/* =========================================================
+   REPORT RESPONSIVE DESIGN
+========================================================= */
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1050px) {
 
     .summary-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -800,41 +1038,337 @@ tr:last-child td {
 
 }
 
-@media(max-width: 700px) {
+
+/* =========================================================
+   SMALL LAPTOP / TABLET
+========================================================= */
+
+@media (max-width: 850px) {
 
     .report-header {
-        margin: 28px 4% 22px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .summary-grid {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .report-grid {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .insights-card {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    /* -----------------------------------------------------
+       REPORT HEADER
+    ----------------------------------------------------- */
+
+    .report-header {
+        margin: 25px 4% 20px;
 
         flex-direction: column;
 
         align-items: flex-start;
+
+        gap: 15px;
     }
 
-    .report-header h1 {
-        font-size: 30px;
+
+    .report-heading {
+        width: 100%;
+
+        gap: 11px;
     }
+
+
+    .report-heading-icon {
+        width: 42px;
+        height: 42px;
+
+        flex-shrink: 0;
+
+        font-size: 20px;
+    }
+
+
+    .report-header h1 {
+        font-size: 28px;
+
+        line-height: 1.2;
+    }
+
+
+    .report-header p {
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+
+    .period-filter {
+        width: 100%;
+
+        box-sizing: border-box;
+
+        text-align: center;
+    }
+
+
+    /* -----------------------------------------------------
+       SUMMARY CARDS
+    ----------------------------------------------------- */
 
     .summary-grid {
         margin: 0 4%;
 
         grid-template-columns: 1fr;
+
+        gap: 14px;
     }
+
+
+    .summary-card {
+        min-height: auto;
+
+        padding: 20px;
+
+        border-radius: 20px;
+    }
+
+
+    .summary-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 18px;
+    }
+
+
+    .summary-value {
+        margin-top: 13px;
+
+        font-size: 26px;
+    }
+
+
+    .summary-note {
+        font-size: 11px;
+    }
+
+
+    /* -----------------------------------------------------
+       REPORT GRID
+    ----------------------------------------------------- */
 
     .report-grid {
-        margin: 20px 4% 0;
+        margin: 18px 4% 0;
+
+        grid-template-columns: 1fr;
+
+        gap: 16px;
     }
+
+
+    .report-card {
+        padding: 20px;
+
+        border-radius: 21px;
+    }
+
+
+    .card-heading {
+        gap: 10px;
+
+        margin-bottom: 16px;
+    }
+
+
+    .card-heading-icon {
+        width: 37px;
+        height: 37px;
+
+        flex-shrink: 0;
+    }
+
+
+    .card-heading h2 {
+        font-size: 20px;
+    }
+
+
+    .card-heading p {
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+
+    /* -----------------------------------------------------
+       RECENT PERIOD TABLE
+    ----------------------------------------------------- */
+
+    .table-wrap {
+        width: 100%;
+
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    table {
+        min-width: 580px;
+    }
+
+
+    th {
+        padding: 10px 9px;
+
+        font-size: 11px;
+    }
+
+
+    td {
+        padding: 12px 9px;
+
+        font-size: 12px;
+    }
+
+
+    .flow-tag {
+        padding: 5px 10px;
+
+        font-size: 10px;
+    }
+
+
+    /* -----------------------------------------------------
+       SYMPTOM SUMMARY
+    ----------------------------------------------------- */
+
+    .symptom-row {
+        gap: 9px;
+
+        padding: 11px 0;
+
+        flex-wrap: nowrap;
+    }
+
+
+    .symptom-icon {
+        width: 33px;
+        height: 33px;
+
+        flex-shrink: 0;
+    }
+
+
+    .symptom-name {
+        min-width: 0;
+
+        font-size: 12px;
+
+        overflow-wrap: anywhere;
+    }
+
+
+    .symptom-count {
+        white-space: nowrap;
+
+        font-size: 11px;
+    }
+
+
+    .severity-tag {
+        padding: 5px 9px;
+
+        font-size: 10px;
+
+        white-space: nowrap;
+    }
+
+
+    /* -----------------------------------------------------
+       WELCOME CARD
+    ----------------------------------------------------- */
 
     .welcome-card {
-        margin: 22px 4% 40px;
+        margin: 20px 4% 40px;
+
+        padding: 35px 20px;
+
+        border-radius: 23px;
     }
 
-    .insights-card {
-        margin: 20px 4% 40px;
+
+    .welcome-icon {
+        width: 60px;
+        height: 60px;
+
+        font-size: 27px;
     }
+
+
+    .welcome-card h2 {
+        font-size: 23px;
+
+        line-height: 1.3;
+    }
+
+
+    .welcome-card p {
+        font-size: 13px;
+
+        line-height: 1.7;
+    }
+
+
+    .welcome-buttons {
+        flex-direction: column;
+
+        width: 100%;
+    }
+
+
+    .welcome-btn {
+        width: 100%;
+
+        box-sizing: border-box;
+
+        text-align: center;
+    }
+
+
+    /* -----------------------------------------------------
+       QUICK INSIGHTS
+    ----------------------------------------------------- */
+
+    .insights-card {
+        margin: 18px 4% 40px;
+    }
+
 
     .insights-grid {
         grid-template-columns: 1fr;
+
+        gap: 0;
     }
+
 
     .insight {
         padding: 14px 0;
@@ -844,8 +1378,276 @@ tr:last-child td {
         border-bottom: 1px solid #f1e2e9;
     }
 
+
+    .insight:first-child {
+        padding-left: 0;
+    }
+
+
     .insight:last-child {
         border-bottom: none;
+    }
+
+
+    .insight-icon {
+        width: 35px;
+        height: 35px;
+
+        flex-shrink: 0;
+    }
+
+
+    .insight p {
+        font-size: 11px;
+
+        line-height: 1.6;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .topbar {
+        padding: 10px 12px;
+    }
+
+
+    .topbar .logo-mark {
+        width: 34px;
+        height: 34px;
+    }
+
+
+    .topbar .logo > span {
+        font-size: 19px;
+    }
+
+
+    .topbar .nav {
+        right: 10px;
+
+        width: 210px;
+    }
+
+
+    .report-header {
+        margin: 20px 12px 17px;
+    }
+
+
+    .report-heading-icon {
+        width: 39px;
+        height: 39px;
+
+        font-size: 18px;
+    }
+
+
+    .report-header h1 {
+        font-size: 25px;
+    }
+
+
+    .report-header p {
+        font-size: 12px;
+    }
+
+
+    .period-filter {
+        padding: 10px 13px;
+
+        font-size: 12px;
+    }
+
+
+    .summary-grid {
+        margin: 0 12px;
+
+        gap: 12px;
+    }
+
+
+    .summary-card {
+        padding: 18px;
+
+        border-radius: 18px;
+    }
+
+
+    .summary-top {
+        gap: 10px;
+    }
+
+
+    .summary-icon {
+        width: 37px;
+        height: 37px;
+
+        font-size: 17px;
+    }
+
+
+    .summary-label {
+        font-size: 11px;
+    }
+
+
+    .summary-value {
+        font-size: 24px;
+    }
+
+
+    .report-grid {
+        margin: 16px 12px 0;
+
+        gap: 13px;
+    }
+
+
+    .report-card {
+        padding: 18px;
+
+        border-radius: 19px;
+    }
+
+
+    .card-heading-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+
+    .card-heading h2 {
+        font-size: 19px;
+    }
+
+
+    .table-wrap {
+        margin-left: -3px;
+        margin-right: -3px;
+    }
+
+
+    table {
+        min-width: 550px;
+    }
+
+
+    .symptom-row {
+        gap: 7px;
+    }
+
+
+    .symptom-icon {
+        width: 30px;
+        height: 30px;
+
+        font-size: 13px;
+    }
+
+
+    .symptom-name {
+        font-size: 11px;
+    }
+
+
+    .symptom-count {
+        font-size: 10px;
+    }
+
+
+    .severity-tag {
+        padding: 4px 7px;
+
+        font-size: 9px;
+    }
+
+
+    .welcome-card {
+        margin: 17px 12px 35px;
+
+        padding: 30px 17px;
+    }
+
+
+    .welcome-card h2 {
+        font-size: 21px;
+    }
+
+
+    .welcome-card p {
+        font-size: 12px;
+    }
+
+
+    .insights-card {
+        margin: 16px 12px 35px;
+    }
+
+
+    .insight p {
+        font-size: 11px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .report-header h1 {
+        font-size: 22px;
+    }
+
+
+    .report-heading {
+        gap: 8px;
+    }
+
+
+    .report-heading-icon {
+        width: 35px;
+        height: 35px;
+
+        font-size: 16px;
+    }
+
+
+    .summary-card {
+        padding: 16px;
+    }
+
+
+    .summary-value {
+        font-size: 22px;
+    }
+
+
+    .report-card {
+        padding: 16px;
+    }
+
+
+    .card-heading h2 {
+        font-size: 18px;
+    }
+
+
+    .welcome-card {
+        padding: 27px 15px;
+    }
+
+
+    .welcome-card h2 {
+        font-size: 20px;
     }
 
 }
@@ -861,53 +1663,72 @@ tr:last-child td {
 
 
 <!-- =====================================================
-     YOUR NAVBAR — UNCHANGED
+     NAVBAR
 ===================================================== -->
 
 <nav class="topbar">
 
-<a class="logo" href="dashboard.php">
+    <a class="logo" href="dashboard.php">
 
-    <img
-        class="logo-mark"
-        src="../assets/femtrack-mark.jpeg"
-        alt=""
+        <img
+            class="logo-mark"
+            src="../assets/femtrack-mark.jpeg"
+            alt=""
+        >
+
+        <span>
+            Fem<span>Track</span>
+        </span>
+
+    </a>
+
+
+    <!-- MOBILE MENU BUTTON -->
+
+    <button
+        type="button"
+        class="mobile-nav-toggle"
+        id="mobileNavToggle"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
     >
 
-    <span>
-        Fem<span>Track</span>
-    </span>
+        <span></span>
+        <span></span>
+        <span></span>
 
-</a>
+    </button>
 
 
-<div class="nav">
+    <!-- NAVIGATION LINKS -->
 
-<a href="../index.php">
-    Home
-</a>
+    <div class="nav" id="mobileNav">
 
-<a href="dashboard.php">
-    Dashboard
-</a>
+        <a href="../index.php">
+            Home
+        </a>
 
-<a href="track-symptoms.php">
-    Track Symptoms
-</a>
+        <a href="dashboard.php">
+            Dashboard
+        </a>
 
-<a class="active" href="reports.php">
-    Reports
-</a>
+        <a href="track-symptoms.php">
+            Track Symptoms
+        </a>
 
-<a href="../about.php">
-    About Us
-</a>
+        <a class="active" href="reports.php">
+            Reports
+        </a>
 
-<a class="logout" href="../logout.php">
-    Logout
-</a>
+        <a href="../about.php">
+            About Us
+        </a>
 
-</div>
+        <a class="logout" href="../logout.php">
+            Logout
+        </a>
+
+    </div>
 
 </nav>
 
@@ -1343,7 +2164,7 @@ Your most tracked symptoms.
 </div>
 
 <p>
-No symptoms recorded yet.
+    No symptoms recorded yet.
 </p>
 
 <a
@@ -1541,6 +2362,138 @@ Keep logging your periods to see your average period length.
 
 
 </main>
+
+
+<!-- =====================================================
+     MOBILE NAVIGATION JAVASCRIPT
+===================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const menuButton =
+        document.getElementById("mobileNavToggle");
+
+    const navigation =
+        document.getElementById("mobileNav");
+
+
+    if (!menuButton || !navigation) {
+        return;
+    }
+
+
+    /* Open / close menu */
+
+    menuButton.addEventListener("click", function () {
+
+        const isOpen =
+            navigation.classList.toggle("mobile-nav-open");
+
+
+        menuButton.classList.toggle(
+            "menu-open",
+            isOpen
+        );
+
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            isOpen ? "true" : "false"
+        );
+
+    });
+
+
+    /* Close menu after clicking a link */
+
+    const menuLinks =
+        navigation.querySelectorAll("a");
+
+
+    menuLinks.forEach(function (link) {
+
+        link.addEventListener("click", function () {
+
+            navigation.classList.remove(
+                "mobile-nav-open"
+            );
+
+
+            menuButton.classList.remove(
+                "menu-open"
+            );
+
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        });
+
+    });
+
+
+    /* Close menu when clicking outside */
+
+    document.addEventListener("click", function (event) {
+
+        if (
+            !navigation.contains(event.target) &&
+            !menuButton.contains(event.target)
+        ) {
+
+            navigation.classList.remove(
+                "mobile-nav-open"
+            );
+
+
+            menuButton.classList.remove(
+                "menu-open"
+            );
+
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+
+    });
+
+
+    /* Close menu with Escape */
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            navigation.classList.remove(
+                "mobile-nav-open"
+            );
+
+
+            menuButton.classList.remove(
+                "menu-open"
+            );
+
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+
+    });
+
+});
+
+</script>
+
 
 </body>
 

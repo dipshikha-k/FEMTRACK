@@ -41,6 +41,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message = "Please fill in all fields.";
 
+    } elseif ($start_date > date("Y-m-d")) {
+
+        $message = "Period start date cannot be in the future.";
+
+    } elseif ($end_date > date("Y-m-d")) {
+
+        $message = "Period end date cannot be in the future.";
+
     } elseif ($end_date < $start_date) {
 
         $message = "End date cannot be before start date.";
@@ -93,7 +101,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <title>Period Log | FemTrack</title>
 
-    <!-- Main FemTrack stylesheet -->
     <link
         rel="stylesheet"
         href="../css/style.css"
@@ -102,16 +109,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <style>
 
-        /* =========================================================
-           PAGE
-        ========================================================= */
-
         * {
             box-sizing: border-box;
         }
 
+
         body {
             margin: 0;
+
             background:
                 radial-gradient(
                     circle at 78% 18%,
@@ -142,12 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
 
-        /* =========================================================
-           PERIOD PAGE
-        ========================================================= */
-
         .period-page {
-
             max-width: 1180px;
 
             margin: 0 auto;
@@ -156,12 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
 
-        /* =========================================================
-           FORM CARD
-        ========================================================= */
-
         .content-card {
-
             max-width: 650px;
 
             margin: 0 auto;
@@ -184,7 +179,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .content-card::before {
-
             content: "";
 
             position: absolute;
@@ -205,12 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
 
-        /* =========================================================
-           FORM HEADER
-        ========================================================= */
-
         .form-header {
-
             text-align: center;
 
             padding-bottom: 25px;
@@ -222,7 +211,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .eyebrow {
-
             display: inline-flex;
 
             align-items: center;
@@ -250,7 +238,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .form-header h1 {
-
             margin: 0;
 
             color: #3b2031;
@@ -266,7 +253,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .lead {
-
             max-width: 520px;
 
             margin: 12px auto 0;
@@ -279,12 +265,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
 
-        /* =========================================================
-           NOTICE
-        ========================================================= */
-
         .notice {
-
             margin-bottom: 25px;
 
             padding: 14px 17px;
@@ -305,12 +286,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
 
-        /* =========================================================
-           FORM
-        ========================================================= */
-
         .form-stack {
-
             display: flex;
 
             flex-direction: column;
@@ -320,7 +296,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .form-stack label {
-
             display: block;
 
             color: #593444;
@@ -333,7 +308,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         .form-stack input,
         .form-stack select {
-
             width: 100%;
 
             box-sizing: border-box;
@@ -367,14 +341,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         .form-stack input:hover,
         .form-stack select:hover {
-
             border-color: #e9a4c0;
         }
 
 
         .form-stack input:focus,
         .form-stack select:focus {
-
             border-color: #e64488;
 
             box-shadow:
@@ -384,12 +356,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
 
-        /* =========================================================
-           PREDICTION BUTTON
-        ========================================================= */
-
         .predict-button {
-
             width: 100%;
 
             padding: 14px 20px;
@@ -425,7 +392,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .predict-button:hover {
-
             transform: translateY(-2px);
 
             box-shadow:
@@ -434,17 +400,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .predict-button:active {
-
             transform: translateY(0);
         }
 
 
-        /* =========================================================
-           PREDICTION BOX
-        ========================================================= */
-
         .prediction-box {
-
             display: none;
 
             background:
@@ -467,7 +427,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .prediction-box h2 {
-
             margin: 0 0 10px;
 
             color: #a83f70;
@@ -479,17 +438,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .prediction-date {
-
             color: #d94f83;
 
             font-size: 28px;
 
             font-weight: 800;
+
+            overflow-wrap: anywhere;
         }
 
 
         .prediction-note {
-
             color: #98717f;
 
             font-size: 12px;
@@ -500,12 +459,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
 
-        /* =========================================================
-           ACTIONS
-        ========================================================= */
-
         .actions {
-
             display: flex;
 
             gap: 12px;
@@ -515,7 +469,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .button {
-
             flex: 1;
 
             border: none;
@@ -555,7 +508,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .button:hover {
-
             transform: translateY(-2px);
 
             box-shadow:
@@ -564,7 +516,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .button.secondary {
-
             background: #fff0f5;
 
             color: #c24f79;
@@ -576,26 +527,46 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         .button.secondary:hover {
-
             background: #fde1eb;
 
             box-shadow: none;
         }
 
 
-        /* =========================================================
+        /* =====================================================
+           TABLET
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .period-page {
+                padding: 45px 20px 65px;
+            }
+
+            .content-card {
+                max-width: 680px;
+            }
+
+        }
+
+
+        /* =====================================================
            MOBILE
-        ========================================================= */
+        ===================================================== */
 
         @media (max-width: 768px) {
 
             .period-page {
+                width: 100%;
 
                 padding: 35px 15px 60px;
             }
 
 
             .content-card {
+                width: 100%;
+
+                max-width: 650px;
 
                 padding: 28px 20px;
 
@@ -603,43 +574,276 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
 
-            .form-header h1 {
+            .form-header {
+                padding-bottom: 22px;
 
+                margin-bottom: 25px;
+            }
+
+
+            .form-header h1 {
                 font-size: 31px;
+
+                line-height: 1.2;
+            }
+
+
+            .lead {
+                font-size: 13px;
+
+                line-height: 1.7;
+            }
+
+
+            .form-stack {
+                gap: 19px;
+            }
+
+
+            .form-stack input,
+            .form-stack select {
+                min-height: 46px;
+
+                padding: 12px 13px;
+
+                font-size: 14px;
+            }
+
+
+            .predict-button {
+                min-height: 48px;
+
+                padding: 13px 16px;
+
+                font-size: 13px;
+            }
+
+
+            .prediction-box {
+                padding: 21px 16px;
+
+                border-radius: 18px;
+            }
+
+
+            .prediction-box h2 {
+                font-size: 19px;
+            }
+
+
+            .prediction-date {
+                font-size: 25px;
+
+                line-height: 1.3;
+            }
+
+
+            .prediction-note {
+                font-size: 11px;
             }
 
 
             .actions {
-
                 flex-direction: column;
+
+                gap: 10px;
+            }
+
+
+            .button {
+                width: 100%;
+
+                min-height: 48px;
+
+                display: flex;
+
+                align-items: center;
+
+                justify-content: center;
+
+                padding: 13px 16px;
             }
 
         }
 
 
+        /* =====================================================
+           SMALL PHONES
+        ===================================================== */
+
         @media (max-width: 480px) {
 
             .period-page {
-
                 padding: 25px 12px 50px;
             }
 
 
             .content-card {
-
                 padding: 25px 16px;
+
+                border-radius: 20px;
+            }
+
+
+            .form-header {
+                padding-bottom: 20px;
+
+                margin-bottom: 22px;
+            }
+
+
+            .eyebrow {
+                padding: 7px 11px;
+
+                font-size: 9px;
+
+                letter-spacing: 1.3px;
             }
 
 
             .form-header h1 {
-
                 font-size: 28px;
+
+                letter-spacing: -.5px;
+            }
+
+
+            .lead {
+                font-size: 12px;
+
+                line-height: 1.65;
+            }
+
+
+            .notice {
+                padding: 12px 13px;
+
+                margin-bottom: 21px;
+
+                font-size: 12px;
+
+                line-height: 1.5;
+            }
+
+
+            .form-stack {
+                gap: 17px;
+            }
+
+
+            .form-stack label {
+                font-size: 12px;
+            }
+
+
+            .form-stack input,
+            .form-stack select {
+                margin-top: 7px;
+
+                min-height: 45px;
+
+                padding: 11px 12px;
+
+                font-size: 13px;
+
+                border-radius: 11px;
+            }
+
+
+            .predict-button {
+                min-height: 46px;
+
+                padding: 12px 14px;
+
+                font-size: 12px;
+
+                border-radius: 12px;
+            }
+
+
+            .prediction-box {
+                padding: 19px 13px;
+
+                border-radius: 17px;
+            }
+
+
+            .prediction-box h2 {
+                font-size: 17px;
+
+                margin-bottom: 8px;
             }
 
 
             .prediction-date {
+                font-size: 22px;
 
-                font-size: 24px;
+                line-height: 1.35;
+            }
+
+
+            .prediction-note {
+                font-size: 10px;
+
+                line-height: 1.55;
+            }
+
+
+            .button {
+                min-height: 46px;
+
+                padding: 12px 14px;
+
+                font-size: 12px;
+
+                border-radius: 12px;
+            }
+
+        }
+
+
+        /* =====================================================
+           VERY SMALL PHONES
+        ===================================================== */
+
+        @media (max-width: 360px) {
+
+            .period-page {
+                padding-left: 8px;
+
+                padding-right: 8px;
+            }
+
+
+            .content-card {
+                padding: 22px 13px;
+
+                border-radius: 18px;
+            }
+
+
+            .form-header h1 {
+                font-size: 25px;
+            }
+
+
+            .lead {
+                font-size: 11px;
+            }
+
+
+            .form-stack input,
+            .form-stack select {
+                font-size: 12px;
+
+                padding-left: 10px;
+
+                padding-right: 10px;
+            }
+
+
+            .prediction-date {
+                font-size: 20px;
             }
 
         }
@@ -652,93 +856,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 
 
-<!-- =========================================================
-     NAVIGATION
-========================================================= -->
+<?php include "../includes/nav.php"; ?>
 
-<nav class="home-nav" aria-label="Main navigation">
-
-    <a
-        class="home-logo"
-        href="../index.php"
-        aria-label="FemTrack home"
-    >
-
-        <img
-            src="../assets/femtrack-mark.jpeg"
-            alt=""
-        >
-
-        <span>
-            Fem<span>Track</span>
-        </span>
-
-    </a>
-
-
-    <div class="home-nav-links app-nav-links">
-
-        <a href="../index.php">
-            Home
-        </a>
-
-
-        <a href="dashboard.php">
-            Dashboard
-        </a>
-
-
-        <a href="track-symptoms.php">
-            Track Symptoms
-        </a>
-
-
-        <a
-            class="active"
-            href="period-log.php"
-        >
-            Period Log
-        </a>
-
-
-        <a href="reports.php">
-            Reports
-        </a>
-
-
-        <a href="../about.php">
-            About Us
-        </a>
-
-
-        <a
-            class="nav-logout"
-            href="../logout.php"
-        >
-            Logout
-        </a>
-
-    </div>
-
-</nav>
-
-
-
-<!-- =========================================================
-     MAIN
-========================================================= -->
 
 <main class="period-page">
 
-
-    <!-- =========================================================
-         PERIOD LOG CARD
-    ========================================================= -->
-
     <section class="content-card">
-
-
-        <!-- HEADER -->
 
         <div class="form-header">
 
@@ -746,11 +869,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 ♡ NEW RECORD
             </div>
 
-
             <h1>
                 Log Your Period
             </h1>
-
 
             <p class="lead">
                 Keep track of your cycle and predict your next period.
@@ -758,11 +879,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         </div>
 
-
-
-        <!-- =====================================================
-             MESSAGE
-        ====================================================== -->
 
         <?php if (!empty($message)): ?>
 
@@ -777,18 +893,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
 
-
-        <!-- =====================================================
-             FORM
-        ====================================================== -->
-
         <form
             method="POST"
             class="form-stack"
+            id="periodForm"
+            onsubmit="return validatePeriodForm();"
         >
 
-
-            <!-- PERIOD START -->
 
             <label>
 
@@ -798,14 +909,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     type="date"
                     name="start_date"
                     id="start_date"
+                    max="<?php echo date('Y-m-d'); ?>"
                     required
                 >
 
             </label>
 
-
-
-            <!-- PERIOD END -->
 
             <label>
 
@@ -814,14 +923,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <input
                     type="date"
                     name="end_date"
+                    id="end_date"
+                    max="<?php echo date('Y-m-d'); ?>"
                     required
                 >
 
             </label>
 
-
-
-            <!-- FLOW -->
 
             <label>
 
@@ -853,91 +961,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </label>
 
 
-
-            <!-- =================================================
-                 CYCLE LENGTH
-            ================================================== -->
-
             <label>
 
                 Your Cycle Length
 
-                <select
-                    id="cycle_length"
-                >
+                <select id="cycle_length">
 
-                    <option value="21">
-                        21 days
-                    </option>
+                    <option value="21">21 days</option>
+                    <option value="22">22 days</option>
+                    <option value="23">23 days</option>
+                    <option value="24">24 days</option>
+                    <option value="25">25 days</option>
+                    <option value="26">26 days</option>
+                    <option value="27">27 days</option>
 
-                    <option value="22">
-                        22 days
-                    </option>
-
-                    <option value="23">
-                        23 days
-                    </option>
-
-                    <option value="24">
-                        24 days
-                    </option>
-
-                    <option value="25">
-                        25 days
-                    </option>
-
-                    <option value="26">
-                        26 days
-                    </option>
-
-                    <option value="27">
-                        27 days
-                    </option>
-
-                    <option
-                        value="28"
-                        selected
-                    >
+                    <option value="28" selected>
                         28 days
                     </option>
 
-                    <option value="29">
-                        29 days
-                    </option>
-
-                    <option value="30">
-                        30 days
-                    </option>
-
-                    <option value="31">
-                        31 days
-                    </option>
-
-                    <option value="32">
-                        32 days
-                    </option>
-
-                    <option value="33">
-                        33 days
-                    </option>
-
-                    <option value="34">
-                        34 days
-                    </option>
-
-                    <option value="35">
-                        35 days
-                    </option>
+                    <option value="29">29 days</option>
+                    <option value="30">30 days</option>
+                    <option value="31">31 days</option>
+                    <option value="32">32 days</option>
+                    <option value="33">33 days</option>
+                    <option value="34">34 days</option>
+                    <option value="35">35 days</option>
 
                 </select>
 
             </label>
 
-
-
-            <!-- =================================================
-                 PREDICT BUTTON
-            ================================================== -->
 
             <button
                 type="button"
@@ -948,11 +1001,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </button>
 
 
-
-            <!-- =================================================
-                 PREDICTION RESULT
-            ================================================== -->
-
             <div
                 class="prediction-box"
                 id="predictionBox"
@@ -962,12 +1010,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     🌸 Your Next Period
                 </h2>
 
-
                 <div
                     class="prediction-date"
                     id="predictionDate"
                 ></div>
-
 
                 <div class="prediction-note">
 
@@ -979,13 +1025,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
 
-
-            <!-- =================================================
-                 ACTION BUTTONS
-            ================================================== -->
-
             <div class="actions">
-
 
                 <button
                     class="button"
@@ -994,14 +1034,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     Save Period 🌸
                 </button>
 
-
                 <a
                     class="button secondary"
                     href="dashboard.php"
                 >
                     Back to Dashboard
                 </a>
-
 
             </div>
 
@@ -1014,36 +1052,239 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================= -->
-
 <script>
+
+
+/*
+|--------------------------------------------------------------------------
+| DATE RESTRICTIONS
+|--------------------------------------------------------------------------
+*/
+
+const startDateInput =
+    document.getElementById("start_date");
+
+const endDateInput =
+    document.getElementById("end_date");
+
+
+/*
+|--------------------------------------------------------------------------
+| WHEN START DATE CHANGES
+|--------------------------------------------------------------------------
+| End date cannot be before start date.
+*/
+
+startDateInput.addEventListener("change", function () {
+
+    const startDate = this.value;
+
+    if (startDate) {
+
+        endDateInput.min = startDate;
+
+        /*
+        | If an already selected end date is invalid,
+        | clear it.
+        */
+
+        if (
+            endDateInput.value &&
+            endDateInput.value < startDate
+        ) {
+
+            endDateInput.value = "";
+
+            document.getElementById(
+                "predictionBox"
+            ).style.display = "none";
+        }
+    }
+
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| WHEN END DATE CHANGES
+|--------------------------------------------------------------------------
+*/
+
+endDateInput.addEventListener("change", function () {
+
+    const startDate = startDateInput.value;
+    const endDate = this.value;
+
+    if (
+        startDate &&
+        endDate &&
+        endDate < startDate
+    ) {
+
+        alert(
+            "End date cannot be before the period start date. 🌸"
+        );
+
+        this.value = "";
+
+        document.getElementById(
+            "predictionBox"
+        ).style.display = "none";
+    }
+
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| FORM VALIDATION BEFORE SAVING
+|--------------------------------------------------------------------------
+*/
+
+function validatePeriodForm() {
+
+    const startDate =
+        startDateInput.value;
+
+    const endDate =
+        endDateInput.value;
+
+
+    if (!startDate || !endDate) {
+
+        alert(
+            "Please select both period start and end dates. 🌸"
+        );
+
+        return false;
+    }
+
+
+    if (endDate < startDate) {
+
+        alert(
+            "End date cannot be before the start date. 🌸"
+        );
+
+        return false;
+    }
+
+
+    return true;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PERIOD PREDICTION
+|--------------------------------------------------------------------------
+*/
 
 function predictPeriod() {
 
     const startDate =
-        document.getElementById("start_date").value;
+        startDateInput.value;
+
+    const endDate =
+        endDateInput.value;
 
 
-    const cycleLength =
-        parseInt(
-            document.getElementById("cycle_length").value
-        );
-
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK START DATE
+    |--------------------------------------------------------------------------
+    */
 
     if (!startDate) {
 
         alert(
-            "Please select your last period start date. 🌸"
+            "Please select your period start date. 🌸"
         );
 
         return;
     }
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK END DATE
+    |--------------------------------------------------------------------------
+    */
+
+    if (!endDate) {
+
+        alert(
+            "Please select your period end date. 🌸"
+        );
+
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK DATE ORDER
+    |--------------------------------------------------------------------------
+    */
+
+    if (endDate < startDate) {
+
+        alert(
+            "End date cannot be before the start date. 🌸"
+        );
+
+        document.getElementById(
+            "predictionBox"
+        ).style.display = "none";
+
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK FUTURE DATE
+    |--------------------------------------------------------------------------
+    */
+
+    const today =
+        new Date().toISOString().split("T")[0];
+
+
+    if (startDate > today || endDate > today) {
+
+        alert(
+            "Period dates cannot be in the future. 🌸"
+        );
+
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | GET CYCLE LENGTH
+    |--------------------------------------------------------------------------
+    */
+
+    const cycleLength =
+        parseInt(
+            document.getElementById(
+                "cycle_length"
+            ).value
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CALCULATE PREDICTION
+    |--------------------------------------------------------------------------
+    */
+
     const date =
-        new Date(startDate + "T00:00:00");
+        new Date(
+            startDate + "T00:00:00"
+        );
 
 
     date.setDate(
@@ -1069,14 +1310,22 @@ function predictPeriod() {
         );
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW RESULT
+    |--------------------------------------------------------------------------
+    */
+
     document.getElementById(
         "predictionDate"
-    ).textContent = predictedDate;
+    ).textContent =
+        predictedDate;
 
 
     document.getElementById(
         "predictionBox"
-    ).style.display = "block";
+    ).style.display =
+        "block";
 
 }
 

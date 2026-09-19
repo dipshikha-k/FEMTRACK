@@ -1,7 +1,8 @@
-
 <?php
 
 session_start();
+
+date_default_timezone_set("Asia/Kathmandu");
 
 require_once __DIR__ . "/../config/database.php";
 
@@ -96,7 +97,12 @@ foreach ($columns as $column => $definition) {
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $symptom_date = $_POST["symptom_date"] ?? "";
+    /*
+     * The check-in date is automatically today's date.
+     * Users do not manually select a date.
+     */
+    $symptom_date = date("Y-m-d");
+
     $symptoms = trim($_POST["symptoms"] ?? "");
     $severity = $_POST["severity"] ?? "";
 
@@ -118,17 +124,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     |--------------------------------------------------------------------------
     */
 
-    if ($symptom_date === "") {
-
-        $message = "Please select a date.";
-        $message_type = "error";
-
-    } elseif ($symptoms === "") {
+    if ($symptoms === "") {
 
         $message = "Please tell us what you're experiencing.";
         $message_type = "error";
 
-    } elseif (!in_array($severity, ["Mild", "Uncomfortable", "Very Uncomfortable"])) {
+    } elseif (
+        !in_array(
+            $severity,
+            ["Mild", "Uncomfortable", "Very Uncomfortable"]
+        )
+    ) {
 
         $message = "Please select a valid severity level.";
         $message_type = "error";
@@ -138,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         /*
         |--------------------------------------------------------------------------
-        | INSERT
+        | INSERT CHECK-IN
         |--------------------------------------------------------------------------
         */
 
@@ -375,6 +381,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         body {
             margin: 0;
+
             background:
                 radial-gradient(
                     circle at 78% 18%,
@@ -396,7 +403,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         .track-page {
             max-width: 1180px;
+
             margin: 0 auto;
+
             padding: 58px 24px 80px;
 
             font-family:
@@ -413,7 +422,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         .page-heading {
             position: relative;
+
             max-width: 760px;
+
             margin-bottom: 38px;
         }
 
@@ -423,18 +434,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             align-items: center;
 
             padding: 8px 14px;
+
             margin-bottom: 15px;
 
             border-radius: 999px;
 
             background: #fff0f6;
+
             border: 1px solid #ffd2e2;
 
             color: #d52d79;
 
             font-size: 10px;
+
             font-weight: 800;
+
             letter-spacing: 1.8px;
+
             text-transform: uppercase;
         }
 
@@ -444,8 +460,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #3b2031;
 
             font-size: clamp(35px, 5vw, 54px);
+
             line-height: 1.08;
+
             font-weight: 800;
+
             letter-spacing: -1.8px;
         }
 
@@ -462,6 +481,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 serif;
 
             font-size: 20px;
+
             font-style: italic;
         }
 
@@ -473,6 +493,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #76606d;
 
             font-size: 14px;
+
             line-height: 1.8;
         }
 
@@ -503,9 +524,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             overflow: hidden;
 
-            background: rgba(255, 255, 255, 0.92);
+            background:
+                rgba(255, 255, 255, 0.92);
 
             border: 1px solid #f3dce6;
+
             border-radius: 26px;
 
             padding: 34px;
@@ -534,9 +557,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 );
         }
 
-
         .form-card-header {
             padding-bottom: 23px;
+
             margin-bottom: 30px;
 
             border-bottom: 1px solid #f4e4eb;
@@ -548,7 +571,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #432535;
 
             font-size: 23px;
+
             font-weight: 800;
+
             letter-spacing: -0.4px;
         }
 
@@ -558,6 +583,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #987b89;
 
             font-size: 13px;
+
             line-height: 1.6;
         }
 
@@ -574,18 +600,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             border-radius: 14px;
 
             font-size: 13px;
+
             font-weight: 700;
         }
 
         .form-alert.success {
             background: #effbf4;
+
             border: 1px solid #cfeedd;
+
             color: #34724e;
         }
 
         .form-alert.error {
             background: #fff0f5;
+
             border: 1px solid #ffd4e1;
+
             color: #b52f64;
         }
 
@@ -596,6 +627,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         .form-section {
             margin-bottom: 34px;
+
             padding: 23px;
 
             background:
@@ -606,6 +638,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 );
 
             border: 1px solid #f7e3eb;
+
             border-radius: 20px;
         }
 
@@ -619,6 +652,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #4a2939;
 
             font-size: 16px;
+
             font-weight: 800;
         }
 
@@ -651,6 +685,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #593444;
 
             font-size: 12px;
+
             font-weight: 800;
         }
 
@@ -662,6 +697,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #aa8b99;
 
             font-size: 11px;
+
             line-height: 1.5;
         }
 
@@ -670,7 +706,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
            INPUTS
         ========================================================= */
 
-        .form-group input[type="date"],
         .form-group input[type="text"],
         .form-group select,
         .form-group textarea {
@@ -682,11 +717,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             background: #ffffff;
 
             border: 1px solid #ecd8e2;
+
             border-radius: 12px;
 
             color: #4b3040;
 
             font-family: inherit;
+
             font-size: 13px;
 
             outline: none;
@@ -697,14 +734,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 transform .2s ease;
         }
 
-        .form-group input[type="date"]:hover,
         .form-group input[type="text"]:hover,
         .form-group select:hover,
         .form-group textarea:hover {
             border-color: #e9a4c0;
         }
 
-        .form-group input[type="date"]:focus,
         .form-group input[type="text"]:focus,
         .form-group select:focus,
         .form-group textarea:focus {
@@ -780,6 +815,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             min-height: 43px;
@@ -791,11 +827,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             background: #ffffff;
 
             border: 1px solid #ecd9e3;
+
             border-radius: 13px;
 
             color: #765867;
 
             font-size: 12px;
+
             font-weight: 700;
 
             text-align: center;
@@ -842,7 +880,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ========================================================= */
 
         .save-area {
-
             padding-top: 8px;
         }
 
@@ -853,6 +890,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             padding: 15px 20px;
 
             border: none;
+
             border-radius: 14px;
 
             background:
@@ -867,6 +905,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             font-family: inherit;
 
             font-size: 14px;
+
             font-weight: 800;
 
             letter-spacing: 0.1px;
@@ -899,7 +938,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         ========================================================= */
 
         .side-column {
-
             display: flex;
 
             flex-direction: column;
@@ -942,6 +980,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             position: absolute;
 
             top: 18px;
+
             right: 23px;
 
             color: #ec5c98;
@@ -956,7 +995,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             position: absolute;
 
             left: 0;
+
             right: 0;
+
             bottom: 0;
 
             height: 7px;
@@ -984,9 +1025,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 serif;
 
             font-size: 30px;
+
             line-height: 1.12;
 
             font-style: italic;
+
             font-weight: 600;
         }
 
@@ -1005,6 +1048,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #d43b7e;
 
             font-size: 9px;
+
             font-weight: 800;
 
             letter-spacing: 1.3px;
@@ -1015,6 +1059,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         .sticky-divider {
 
             width: 46px;
+
             height: 3px;
 
             margin-bottom: 17px;
@@ -1086,9 +1131,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             padding: 24px;
 
-            background: rgba(255, 255, 255, 0.88);
+            background:
+                rgba(255, 255, 255, 0.88);
 
             border: 1px solid #f0dfe7;
+
             border-radius: 22px;
 
             box-shadow:
@@ -1100,9 +1147,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             width: 42px;
+
             height: 42px;
 
             margin-bottom: 13px;
@@ -1123,6 +1172,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             color: #4d2c3c;
 
             font-size: 15px;
+
             font-weight: 800;
         }
 
@@ -1153,6 +1203,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             padding: 20px;
@@ -1165,7 +1216,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             animation:
                 popupFadeIn .25s ease;
         }
-
 
         .femtrack-popup {
 
@@ -1195,15 +1245,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 popupSlideUp .35s ease;
         }
 
-
         .femtrack-popup-heart {
 
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             width: 58px;
+
             height: 58px;
 
             margin: 0 auto 18px;
@@ -1219,7 +1270,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             box-shadow:
                 0 8px 22px rgba(218, 59, 125, .14);
         }
-
 
         .femtrack-popup h2 {
 
@@ -1237,7 +1287,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             font-style: italic;
         }
 
-
         .femtrack-popup-subtitle {
 
             margin-bottom: 20px;
@@ -1252,7 +1301,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             text-transform: uppercase;
         }
-
 
         .femtrack-popup-message {
 
@@ -1278,7 +1326,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             line-height: 1.75;
         }
 
-
         .femtrack-popup-signature {
 
             margin-top: 18px;
@@ -1294,7 +1341,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             font-style: italic;
         }
-
 
         .femtrack-popup-close {
 
@@ -1334,7 +1380,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 box-shadow .2s ease;
         }
 
-
         .femtrack-popup-close:hover {
 
             transform:
@@ -1357,7 +1402,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
 
-
         @keyframes popupSlideUp {
 
             from {
@@ -1379,60 +1423,239 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         /* =========================================================
-           MOBILE
+           TABLET
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .track-page {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .content-grid {
+                grid-template-columns:
+                    minmax(0, 1fr)
+                    290px;
+
+                gap: 22px;
+            }
+
+            .form-card {
+                padding: 28px;
+            }
+
+            .choice-grid.five {
+                grid-template-columns:
+                    repeat(4, minmax(0, 1fr));
+            }
+        }
+
+
+        /* =========================================================
+           TABLET / SMALL LAPTOP
         ========================================================= */
 
         @media (max-width: 900px) {
 
-            .content-grid {
+            .track-page {
+                max-width: 100%;
+            }
 
+            .content-grid {
                 grid-template-columns: 1fr;
             }
 
             .side-column {
-
                 display: grid;
 
                 grid-template-columns:
                     repeat(2, minmax(0, 1fr));
 
                 align-items: start;
+
+                gap: 18px;
             }
+
+            .sticky-note {
+                min-height: 300px;
+            }
+
         }
 
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
 
         @media (max-width: 650px) {
 
             .track-page {
+                width: 100%;
 
-                padding: 35px 15px 60px;
+                padding: 30px 12px 50px;
+            }
+
+
+            /* PAGE HEADING */
+
+            .page-heading {
+                margin-bottom: 25px;
+            }
+
+            .page-eyebrow {
+                font-size: 9px;
+
+                padding: 7px 11px;
+
+                letter-spacing: 1.5px;
             }
 
             .page-heading h1 {
+                font-size: 32px;
 
-                font-size: 37px;
+                line-height: 1.18;
+
+                letter-spacing: -1px;
             }
 
-            .form-card {
+            .heading-soft {
+                font-size: 17px;
 
-                padding: 20px 15px;
+                line-height: 1.4;
+            }
+
+            .page-heading p {
+                font-size: 13px;
+
+                line-height: 1.7;
+
+                margin-top: 14px;
+            }
+
+
+            /* FORM CARD */
+
+            .form-card {
+                width: 100%;
+
+                padding: 20px 14px;
 
                 border-radius: 21px;
             }
 
-            .form-section {
+            .form-card-header {
+                padding-bottom: 18px;
 
-                padding: 18px 14px;
+                margin-bottom: 22px;
+            }
+
+            .form-card-header h2 {
+                font-size: 20px;
+
+                line-height: 1.35;
+            }
+
+            .form-card-header p {
+                font-size: 12px;
+
+                line-height: 1.6;
+            }
+
+
+            /* ALERT */
+
+            .form-alert {
+                padding: 12px 13px;
+
+                margin-bottom: 20px;
+
+                font-size: 12px;
+
+                line-height: 1.5;
+            }
+
+
+            /* FORM SECTIONS */
+
+            .form-section {
+                padding: 17px 13px;
+
+                margin-bottom: 22px;
 
                 border-radius: 17px;
             }
 
-            .form-row {
+            .section-heading {
+                margin-bottom: 17px;
+            }
 
+            .section-heading h3 {
+                font-size: 15px;
+
+                line-height: 1.4;
+            }
+
+            .section-heading p {
+                font-size: 11px;
+
+                line-height: 1.5;
+            }
+
+
+            /* FORM GROUPS */
+
+            .form-group {
+                margin-bottom: 18px;
+            }
+
+            .form-group label {
+                font-size: 11px;
+
+                line-height: 1.5;
+            }
+
+            .form-hint {
+                font-size: 10px;
+
+                line-height: 1.5;
+            }
+
+
+            /* INPUTS */
+
+            .form-group input[type="text"],
+            .form-group select,
+            .form-group textarea {
+
+                width: 100%;
+
+                max-width: 100%;
+
+                min-width: 0;
+
+                padding: 12px;
+
+                font-size: 13px;
+
+                border-radius: 11px;
+            }
+
+            .form-group textarea {
+                min-height: 120px;
+            }
+
+
+            /* TWO COLUMNS → ONE */
+
+            .form-row {
                 grid-template-columns: 1fr;
 
                 gap: 0;
             }
+
+
+            /* CHOICE BUTTONS */
 
             .choice-grid,
             .choice-grid.four,
@@ -1440,44 +1663,252 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 grid-template-columns:
                     repeat(2, minmax(0, 1fr));
+
+                gap: 8px;
             }
+
+            .choice-option {
+                min-width: 0;
+            }
+
+            .choice-option label {
+
+                width: 100%;
+
+                min-height: 42px;
+
+                padding: 8px 6px;
+
+                font-size: 11px;
+
+                line-height: 1.3;
+
+                overflow-wrap: anywhere;
+            }
+
+
+            /* SAVE */
+
+            .save-area {
+                padding-top: 2px;
+            }
+
+            .save-button {
+                padding: 14px 16px;
+
+                font-size: 13px;
+
+                border-radius: 13px;
+            }
+
+
+            /* SIDE COLUMN */
 
             .side-column {
-
                 grid-template-columns: 1fr;
+
+                gap: 18px;
             }
+
+
+            /* NOTE */
 
             .sticky-note {
-
                 min-height: auto;
-            }
 
-            .sticky-title {
-
-                font-size: 27px;
-            }
-
-
-            /* POPUP MOBILE */
-
-            .femtrack-popup {
-
-                padding: 32px 20px 25px;
+                padding: 30px 22px 27px;
 
                 border-radius: 23px;
             }
 
-            .femtrack-popup h2 {
+            .sticky-title {
+                font-size: 26px;
 
-                font-size: 24px;
+                line-height: 1.15;
             }
 
-            .femtrack-popup-message {
+            .sticky-text {
+                font-size: 14px;
+
+                line-height: 1.7;
+            }
+
+            .sticky-empty {
+                margin-top: 30px;
 
                 font-size: 14px;
 
-                padding: 17px;
+                line-height: 1.7;
             }
+
+
+            /* PRIVACY */
+
+            .privacy-card {
+                padding: 21px;
+
+                border-radius: 19px;
+            }
+
+            .privacy-card h3 {
+                font-size: 14px;
+            }
+
+            .privacy-card p {
+                font-size: 11px;
+
+                line-height: 1.7;
+            }
+
+
+            /* POPUP */
+
+            .femtrack-popup-overlay {
+                padding: 14px;
+            }
+
+            .femtrack-popup {
+
+                width: 100%;
+
+                max-width: 430px;
+
+                padding: 28px 18px 22px;
+
+                border-radius: 22px;
+            }
+
+            .femtrack-popup-heart {
+                width: 52px;
+
+                height: 52px;
+
+                font-size: 23px;
+
+                margin-bottom: 15px;
+            }
+
+            .femtrack-popup h2 {
+                font-size: 23px;
+
+                line-height: 1.25;
+            }
+
+            .femtrack-popup-subtitle {
+                font-size: 9px;
+
+                margin-bottom: 16px;
+            }
+
+            .femtrack-popup-message {
+                padding: 16px;
+
+                font-size: 13px;
+
+                line-height: 1.7;
+            }
+
+            .femtrack-popup-signature {
+                font-size: 12px;
+            }
+
+            .femtrack-popup-close {
+                margin-top: 19px;
+
+                padding: 12px 15px;
+
+                font-size: 12px;
+            }
+
+        }
+
+
+        /* =========================================================
+           SMALL PHONES
+        ========================================================= */
+
+        @media (max-width: 400px) {
+
+            .track-page {
+                padding: 25px 9px 40px;
+            }
+
+            .page-heading {
+                margin-bottom: 21px;
+            }
+
+            .page-heading h1 {
+                font-size: 28px;
+
+                line-height: 1.2;
+            }
+
+            .heading-soft {
+                font-size: 15px;
+            }
+
+            .page-heading p {
+                font-size: 12px;
+
+                line-height: 1.7;
+            }
+
+            .form-card {
+                padding: 17px 11px;
+
+                border-radius: 19px;
+            }
+
+            .form-card-header h2 {
+                font-size: 19px;
+            }
+
+            .form-section {
+                padding: 15px 11px;
+
+                border-radius: 16px;
+            }
+
+            .section-heading h3 {
+                font-size: 14px;
+            }
+
+            .choice-grid,
+            .choice-grid.four,
+            .choice-grid.five {
+
+                gap: 7px;
+            }
+
+            .choice-option label {
+                min-height: 40px;
+
+                padding: 7px 5px;
+
+                font-size: 10px;
+            }
+
+            .sticky-note {
+                padding: 27px 19px 25px;
+            }
+
+            .sticky-title {
+                font-size: 23px;
+            }
+
+            .sticky-text,
+            .sticky-empty {
+                font-size: 13px;
+            }
+
+            .femtrack-popup {
+                padding: 25px 15px 20px;
+            }
+
+            .femtrack-popup h2 {
+                font-size: 21px;
+            }
+
         }
 
     </style>
@@ -1492,61 +1923,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
      NAVIGATION
 ========================================================= -->
 
-<nav class="home-nav" aria-label="Main navigation">
-
-    <a
-        class="home-logo"
-        href="../index.php"
-        aria-label="FemTrack home"
-    >
-
-        <img
-            src="../assets/femtrack-mark.jpeg"
-            alt=""
-        >
-
-        <span>
-            Fem<span>Track</span>
-        </span>
-
-    </a>
-
-
-    <div class="home-nav-links app-nav-links">
-
-        <a href="../index.php">
-            Home
-        </a>
-
-        <a href="dashboard.php">
-            Dashboard
-        </a>
-
-        <a
-            class="active"
-            href="track-symptoms.php"
-        >
-            Track Symptoms
-        </a>
-
-        <a href="reports.php">
-            Reports
-        </a>
-
-        <a href="../about.php">
-            About Us
-        </a>
-
-        <a
-            class="nav-logout"
-            href="../logout.php"
-        >
-            Logout
-        </a>
-
-    </div>
-
-</nav>
+<?php include "../includes/nav.php"; ?>
 
 
 <!-- =========================================================
@@ -1637,66 +2014,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     </div>
 
 
-                    <div class="form-row">
+                    <div class="form-group">
 
+                        <label for="severity">
+                            How does it feel today?
+                        </label>
 
-                        <div class="form-group">
+                        <select
+                            id="severity"
+                            name="severity"
+                            required
+                        >
 
-                            <label for="symptom_date">
-                                What day are we checking in?
-                            </label>
+                            <option value="">
+                                Choose one
+                            </option>
 
-                            <input
-                                type="date"
-                                id="symptom_date"
-                                name="symptom_date"
-                                value="<?php echo htmlspecialchars($_POST["symptom_date"] ?? date("Y-m-d")); ?>"
-                                required
+                            <option
+                                value="Mild"
+                                <?php echo (($_POST["severity"] ?? "") === "Mild") ? "selected" : ""; ?>
                             >
+                                Mild
+                            </option>
 
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="severity">
-                                How does it feel today?
-                            </label>
-
-                            <select
-                                id="severity"
-                                name="severity"
-                                required
+                            <option
+                                value="Uncomfortable"
+                                <?php echo (($_POST["severity"] ?? "") === "Uncomfortable") ? "selected" : ""; ?>
                             >
+                                Uncomfortable
+                            </option>
 
-                                <option value="">
-                                    Choose one
-                                </option>
+                            <option
+                                value="Very Uncomfortable"
+                                <?php echo (($_POST["severity"] ?? "") === "Very Uncomfortable") ? "selected" : ""; ?>
+                            >
+                                Very Uncomfortable
+                            </option>
 
-                                <option
-                                    value="Mild"
-                                    <?php echo (($_POST["severity"] ?? "") === "Mild") ? "selected" : ""; ?>
-                                >
-                                    Mild
-                                </option>
-
-                                <option
-                                    value="Uncomfortable"
-                                    <?php echo (($_POST["severity"] ?? "") === "Uncomfortable") ? "selected" : ""; ?>
-                                >
-                                    Uncomfortable
-                                </option>
-
-                                <option
-                                    value="Very Uncomfortable"
-                                    <?php echo (($_POST["severity"] ?? "") === "Very Uncomfortable") ? "selected" : ""; ?>
-                                >
-                                    Very Uncomfortable
-                                </option>
-
-                            </select>
-
-                        </div>
+                        </select>
 
                     </div>
 
@@ -2404,4 +2759,3 @@ if (popupOverlay) {
 </body>
 
 </html>
-```
