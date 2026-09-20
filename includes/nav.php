@@ -24,6 +24,7 @@ if ($isUserPage) {
     $symptoms = "track-symptoms.php";
     $period = "period-log.php";
     $reports = "reports.php";
+    $yoga = "yoga-exercise.php";
     $about = "../about.php";
     $logout = "../logout.php";
 
@@ -34,6 +35,7 @@ if ($isUserPage) {
     $symptoms = "user/track-symptoms.php";
     $period = "user/period-log.php";
     $reports = "user/reports.php";
+    $yoga = "user/yoga-exercise.php";
     $about = "about.php";
     $logout = "logout.php";
 }
@@ -102,6 +104,10 @@ if ($isUserPage) {
         <a href="<?php echo $reports; ?>">
             Reports
         </a>
+        
+        <a href="<?php echo $yoga; ?>">
+            Yoga & Exercise
+        </a>
 
         <a href="<?php echo $about; ?>">
             About Us
@@ -125,6 +131,38 @@ if ($isUserPage) {
 
 
 <style>
+
+
+
+
+
+
+/* =========================================================
+   DESKTOP NAVBAR
+   ========================================================= */
+
+.home-nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.home-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+.home-nav-links a {
+    white-space: nowrap;
+    padding: 9px 12px;
+    font-size: 14px;
+}
+
+
+
+
 
 /* =========================================================
    MOBILE MENU BUTTON

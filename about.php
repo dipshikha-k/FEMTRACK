@@ -1229,86 +1229,10 @@ session_start();
 
 <body class="about-page">
 
-
 <!-- ================= NAVBAR ================= -->
 
-<nav class="topbar">
+<?php include "includes/nav.php"; ?>
 
-    <a class="logo" href="index.php">
-
-        <img
-            class="logo-mark"
-            src="assets/femtrack-mark.jpeg"
-            alt="FemTrack"
-        >
-
-        <span>Fem<span>Track</span></span>
-
-    </a>
-
-
-    <!-- MOBILE HAMBURGER -->
-
-    <button
-        class="mobile-about-toggle"
-        id="aboutMobileNavToggle"
-        type="button"
-        aria-label="Open navigation menu"
-        aria-expanded="false"
-        aria-controls="aboutMobileNav"
-    >
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-
-    <div class="nav" id="aboutMobileNav">
-
-        <a href="index.php">
-            Home
-        </a>
-
-
-        <?php if (isset($_SESSION['user_id'])): ?>
-
-            <a href="user/dashboard.php">
-                Dashboard
-            </a>
-
-            <a href="user/track-symptoms.php">
-                Track Symptoms
-            </a>
-
-            <a href="user/reports.php">
-                Reports
-            </a>
-
-        <?php endif; ?>
-
-
-        <a class="active" href="about.php">
-            About Us
-        </a>
-
-
-        <?php if (isset($_SESSION['user_id'])): ?>
-
-            <a class="logout" href="logout.php">
-                Logout
-            </a>
-
-        <?php else: ?>
-
-            <a class="logout" href="login.php">
-                Log in
-            </a>
-
-        <?php endif; ?>
-
-    </div>
-
-</nav>
 
 
 <main class="about-content">
