@@ -308,6 +308,7 @@ function generateFemTrackAnalysis(
     */
 
     if ($mood_swings === "Yes") {
+        
 
         $emotionalConcern = true;
 
@@ -925,7 +926,7 @@ if ($recentQuery) {
 
 .track-symptoms-page {
     font-family: "Belleza", sans-serif;
-    color: #302a3f;
+    color: #3f2a36;
 }
 
 
@@ -952,7 +953,7 @@ if ($recentQuery) {
     margin: 0;
     font-family: "Playfair Display", serif;
     font-size: 38px;
-    color: #4d3a62;
+    color: #623a5a;
 }
 
 .track-symptoms-page .page-header p {

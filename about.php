@@ -10,1214 +10,985 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>About Us | FemTrack</title>
+    <title>About | FemTrack</title>
 
     <link rel="stylesheet" href="css/style.css">
 
     <style>
 
-        /* ================================
-           FEMTRACK - ABOUT US
-        ================================= */
+        /* =========================================================
+           FEMTRACK ABOUT
+           PINTEREST / EDITORIAL / WOMEN'S WELLNESS
+           
+           IMPORTANT:
+           NAVBAR IS NOT STYLED OR MODIFIED HERE.
+        ========================================================= */
 
-        * {
+
+        .about-page {
+            margin: 0;
+            background: #fcf7f8;
+            color: #3b2933;
+            overflow-x: hidden;
+        }
+
+
+        .about-page * {
             box-sizing: border-box;
         }
 
-        body.about-page {
-            margin: 0;
-            background: #fff8fb;
-            color: #4f263b;
-        }
 
+        /* =========================================================
+           EDITORIAL CONTAINER
+        ========================================================= */
 
-        /* ---------- NAVBAR ---------- */
-
-        .about-page .topbar {
-            width: 100%;
-            background: rgba(255,255,255,0.96);
-            border-bottom: 1px solid #f3dce7;
-            box-shadow: 0 4px 20px rgba(100,40,70,0.06);
-        }
-
-        .about-page .logo {
-            color: #3d1934;
-            font-size: 1.2rem;
-            font-weight: 900;
-            letter-spacing: -.04em;
-            text-decoration: none;
-        }
-
-        .about-page .logo > span > span {
-            color: #d75b93;
-        }
-
-        .about-page .logo:hover {
-            color: #3d1934;
-            text-decoration: none;
-        }
-
-        .about-page .nav a {
-            color: #70485b;
-            transition: .3s;
-        }
-
-        .about-page .nav a:hover,
-        .about-page .nav a.active {
-            color: #c64e86;
-            background: transparent;
-        }
-
-        .about-page .nav .logout {
-            background: #401c38;
-            color: white;
-        }
-
-
-        /* ---------- MOBILE MENU BUTTON ---------- */
-
-        .mobile-about-toggle {
-            display: none;
-        }
-
-
-        /* ---------- MAIN ---------- */
-
-        .about-content {
-            max-width: 1180px;
+        .editorial-page {
+            width: min(1240px, 92%);
             margin: auto;
-            padding: 60px 25px 80px;
         }
 
 
-        /* ---------- HERO ---------- */
+        /* =========================================================
+           HERO
+        ========================================================= */
 
-        .about-hero {
-            position: relative;
-            min-height: 480px;
+        .editorial-hero {
+            min-height: 620px;
 
-            display: flex;
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+
             align-items: center;
-            justify-content: center;
 
-            text-align: center;
+            gap: 60px;
 
-            padding: 70px 30px;
+            padding: 75px 5% 85px;
 
-            border-radius: 45px;
-
-            overflow: hidden;
-
-            background:
-                radial-gradient(circle at 15% 20%, #f9d7e6 0 70px, transparent 71px),
-                radial-gradient(circle at 88% 80%, #f8d9e8 0 90px, transparent 91px),
-                linear-gradient(135deg, #fff1f6, #fbe1ed);
-
-            box-shadow:
-                0 25px 60px rgba(158,67,105,.10);
+            position: relative;
         }
 
 
-        .about-hero::before {
-            content: "✿";
-            position: absolute;
-            left: 55px;
-            top: 45px;
-
-            font-size: 80px;
-
-            color: #df9fba;
-
-            opacity: .45;
-        }
-
-        .about-hero::after {
-            content: "❀";
-            position: absolute;
-            right: 55px;
-            bottom: 35px;
-
-            font-size: 90px;
-
-            color: #df9fba;
-
-            opacity: .4;
-        }
-
-
-        .hero-content {
-            max-width: 800px;
+        .hero-copy {
             position: relative;
             z-index: 2;
         }
 
 
-        .hero-small {
-            color: #c15a87;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 4px;
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin-bottom: 25px;
+
+            color: #ad6680;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            letter-spacing: 3px;
+
             text-transform: uppercase;
-            margin-bottom: 20px;
         }
 
 
-        .about-hero h1 {
+        .eyebrow::before {
+            content: "";
+
+            width: 38px;
+            height: 1px;
+
+            background: #c9899f;
+        }
+
+
+        .hero-copy h1 {
             margin: 0;
 
-            color: #5b2942;
+            max-width: 650px;
 
-            font-family: Georgia, "Times New Roman", serif;
+            color: #4f2c3c;
 
-            font-size: clamp(42px, 6vw, 72px);
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
 
-            line-height: 1.05;
+            font-size: clamp(55px, 7vw, 92px);
 
-            font-weight: normal;
+            font-weight: 400;
+
+            line-height: .98;
+
+            letter-spacing: -3px;
         }
 
 
-        .about-hero h1 em {
-            color: #c95887;
+        .hero-copy h1 em {
+            color: #bd6586;
+
+            font-style: italic;
         }
 
 
-        .hero-line {
-            width: 70px;
-            height: 2px;
+        .hero-copy .hero-description {
+            max-width: 470px;
 
-            background: #d4779f;
+            margin: 32px 0 0;
 
-            margin: 25px auto;
-        }
+            color: #7d6570;
 
-
-        .about-hero p {
-            max-width: 680px;
-
-            margin: auto;
-
-            color: #795a68;
-
-            font-size: 17px;
+            font-size: 15px;
 
             line-height: 1.9;
         }
 
 
-        /* ---------- INTRO ---------- */
+        .hero-small {
+            margin-top: 32px;
 
-        .intro {
-            text-align: center;
-
-            max-width: 760px;
-
-            margin: 75px auto 45px;
-        }
-
-        .section-label {
-            color: #c15a87;
+            color: #a58c96;
 
             font-size: 11px;
 
-            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================================================
+           HERO VISUAL
+        ========================================================= */
+
+        .hero-art {
+            position: relative;
+
+            min-height: 490px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .hero-art-main {
+            width: 340px;
+            height: 440px;
+
+            position: relative;
+
+            overflow: hidden;
+
+            border-radius: 170px 170px 20px 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #eed1dc,
+                    #f8e8ed 48%,
+                    #dfb7c8
+                );
+
+            box-shadow:
+                20px 30px 60px rgba(91, 47, 66, .13);
+        }
+
+
+        .hero-art-main::before {
+            content: "";
+
+            position: absolute;
+
+            width: 250px;
+            height: 250px;
+
+            left: 45px;
+            top: 65px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255,255,255,.8) 0 30%,
+                    rgba(255,255,255,.28) 31% 60%,
+                    transparent 61%
+                );
+        }
+
+
+        .hero-art-main::after {
+            content: "♡";
+
+            position: absolute;
+
+            left: 50%;
+            top: 50%;
+
+            transform: translate(-50%, -50%);
+
+            color: rgba(125,65,91,.45);
+
+            font-family: Georgia, serif;
+
+            font-size: 95px;
+        }
+
+
+        .hero-note {
+            position: absolute;
+
+            right: -10px;
+            bottom: 38px;
+
+            width: 205px;
+
+            padding: 25px 23px;
+
+            background: rgba(255,255,255,.88);
+
+            border: 1px solid rgba(255,255,255,.9);
+
+            box-shadow:
+                0 18px 45px rgba(73,38,55,.10);
+
+            transform: rotate(3deg);
+        }
+
+
+        .hero-note small {
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: #b66d87;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+        }
+
+
+        .hero-note strong {
+            color: #593343;
+
+            font-family: Georgia, serif;
+
+            font-size: 21px;
+
+            font-weight: 400;
+
+            line-height: 1.35;
+        }
+
+
+        .hero-number {
+            position: absolute;
+
+            left: 10px;
+            top: 50px;
+
+            color: #d8b4c2;
+
+            font-family: Georgia, serif;
+
+            font-size: 80px;
+
+            font-weight: 400;
+
+            line-height: 1;
+        }
+
+
+        /* =========================================================
+           INTRODUCTION
+        ========================================================= */
+
+        .editorial-intro {
+            padding: 95px 8% 105px;
+
+            border-top: 1px solid #eadde2;
+
+            border-bottom: 1px solid #eadde2;
+
+            text-align: center;
+        }
+
+
+        .intro-kicker {
+            color: #b36b84;
+
+            font-size: 10px;
+
+            font-weight: 700;
 
             letter-spacing: 3px;
 
             text-transform: uppercase;
         }
 
-        .intro h2 {
-            margin: 12px 0;
 
-            color: #5b2942;
+        .editorial-intro h2 {
+            max-width: 850px;
 
-            font-family: Georgia, serif;
+            margin: 22px auto;
 
-            font-size: 38px;
-
-            font-weight: normal;
-        }
-
-        .intro h2 span {
-            color: #d16a97;
-        }
-
-        .intro p {
-            color: #846875;
-
-            line-height: 1.8;
-
-            font-size: 15px;
-        }
-
-
-        /* ---------- VALUES ---------- */
-
-        .values {
-            display: grid;
-
-            grid-template-columns: repeat(3, 1fr);
-
-            gap: 22px;
-        }
-
-
-        .value-card {
-            position: relative;
-
-            background: #ffffff;
-
-            border: 1px solid #f3dce7;
-
-            border-radius: 28px;
-
-            padding: 35px 30px;
-
-            text-align: center;
-
-            box-shadow:
-                0 15px 35px rgba(130,55,90,.06);
-
-            transition: .35s;
-        }
-
-
-        .value-card:hover {
-            transform: translateY(-8px);
-
-            box-shadow:
-                0 22px 45px rgba(130,55,90,.11);
-        }
-
-
-        .value-icon {
-            width: 65px;
-            height: 65px;
-
-            margin: 0 auto 22px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 50%;
-
-            background: #fce5ef;
-
-            color: #c65384;
-
-            font-size: 27px;
-        }
-
-
-        .value-card h3 {
-            color: #633049;
+            color: #4f2d3c;
 
             font-family: Georgia, serif;
 
-            font-size: 21px;
+            font-size: clamp(34px, 5vw, 57px);
 
-            margin-bottom: 12px;
+            font-weight: 400;
+
+            line-height: 1.12;
+
+            letter-spacing: -1.5px;
         }
 
 
-        .value-card p {
-            color: #886b78;
+        .editorial-intro h2 em {
+            color: #bd6687;
 
-            line-height: 1.7;
+            font-style: italic;
+        }
+
+
+        .editorial-intro p {
+            max-width: 650px;
+
+            margin: auto;
+
+            color: #806a74;
 
             font-size: 14px;
 
-            margin: 0;
+            line-height: 1.9;
         }
 
 
-        /* ---------- STORY ---------- */
+        /* =========================================================
+           STORY SECTION
+        ========================================================= */
 
-        .story {
-            margin-top: 70px;
-
+        .story-section {
             display: grid;
 
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: .8fr 1.2fr;
 
-            gap: 25px;
-
-            align-items: stretch;
-        }
-
-
-        .story-image {
-            min-height: 390px;
-
-            border-radius: 35px;
-
-            display: flex;
+            gap: 90px;
 
             align-items: center;
 
-            justify-content: center;
-
-            text-align: center;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #f8d7e6,
-                    #fcecf3
-                );
-
-            position: relative;
-
-            overflow: hidden;
+            padding: 120px 7%;
         }
 
 
-        .story-image::before {
-            content: "♡";
+        .story-label {
+            color: #b66b85;
 
-            position: absolute;
+            font-size: 10px;
 
-            top: 25px;
-            left: 35px;
+            font-weight: 700;
 
-            font-size: 70px;
+            letter-spacing: 3px;
 
-            color: #d58aaa;
-
-            opacity: .35;
+            text-transform: uppercase;
         }
 
 
-        .story-image::after {
-            content: "✿";
+        .story-left h2 {
+            margin: 18px 0 0;
 
-            position: absolute;
-
-            right: 30px;
-            bottom: 20px;
-
-            font-size: 80px;
-
-            color: #d58aaa;
-
-            opacity: .35;
-        }
-
-
-        .story-flower {
-            font-size: 110px;
-
-            filter: drop-shadow(
-                0 12px 15px rgba(150,60,100,.12)
-            );
-        }
-
-
-        .story-text {
-            background: white;
-
-            border: 1px solid #f3dce7;
-
-            border-radius: 35px;
-
-            padding: 50px;
-
-            box-shadow:
-                0 15px 35px rgba(130,55,90,.06);
-        }
-
-
-        .story-text h2 {
-            color: #5b2942;
+            color: #4e2b3b;
 
             font-family: Georgia, serif;
 
-            font-size: 36px;
+            font-size: 49px;
 
-            font-weight: normal;
+            font-weight: 400;
 
-            line-height: 1.2;
-
-            margin: 12px 0 20px;
+            line-height: 1.08;
         }
 
 
-        .story-text h2 span {
-            color: #d16a97;
+        .story-left h2 em {
+            color: #bd6586;
+
+            font-style: italic;
         }
 
 
-        .story-text p {
-            color: #846875;
+        .story-right {
+            padding-left: 35px;
 
-            line-height: 1.85;
+            border-left: 1px solid #dfcbd4;
+        }
+
+
+        .story-right p {
+            margin: 0 0 22px;
+
+            color: #765f6a;
 
             font-size: 15px;
+
+            line-height: 1.95;
         }
 
 
-        /* ---------- QUOTE ---------- */
+        .story-signature {
+            margin-top: 28px;
 
-        .quote {
-            margin-top: 70px;
-
-            padding: 60px 30px;
-
-            text-align: center;
-
-            border-radius: 35px;
-
-            background: #5d2c45;
-
-            color: white;
-
-            position: relative;
-
-            overflow: hidden;
-        }
-
-
-        .quote::before {
-            content: "“";
-
-            position: absolute;
-
-            left: 25px;
-            top: -20px;
+            color: #ad7186;
 
             font-family: Georgia, serif;
 
-            font-size: 180px;
+            font-size: 16px;
 
-            color: rgba(255,255,255,.07);
+            font-style: italic;
         }
 
 
-        .quote p {
-            position: relative;
+        /* =========================================================
+           FEATURE EDITORIAL
+        ========================================================= */
 
-            max-width: 750px;
+        .feature-section {
+            padding: 110px 5%;
 
-            margin: auto;
+            background: #f5e7ec;
+        }
+
+
+        .feature-heading {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-end;
+
+            gap: 40px;
+
+            margin-bottom: 65px;
+        }
+
+
+        .feature-heading h2 {
+            margin: 0;
+
+            color: #4e2c3b;
+
+            font-family: Georgia, serif;
+
+            font-size: clamp(38px, 5vw, 59px);
+
+            font-weight: 400;
+
+            line-height: 1.05;
+        }
+
+
+        .feature-heading p {
+            max-width: 310px;
+
+            margin: 0;
+
+            color: #806975;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+        }
+
+
+        .feature-list {
+            border-top: 1px solid #d8bec9;
+        }
+
+
+        .editorial-feature {
+            display: grid;
+
+            grid-template-columns: 90px 1fr 1fr;
+
+            align-items: center;
+
+            gap: 40px;
+
+            min-height: 145px;
+
+            border-bottom: 1px solid #d8bec9;
+        }
+
+
+        .feature-number {
+            color: #b7788e;
+
+            font-family: Georgia, serif;
+
+            font-size: 16px;
+        }
+
+
+        .editorial-feature h3 {
+            margin: 0;
+
+            color: #543041;
 
             font-family: Georgia, serif;
 
             font-size: 28px;
 
-            line-height: 1.5;
+            font-weight: 400;
         }
 
 
-        .quote span {
-            display: block;
+        .editorial-feature p {
+            margin: 0;
 
-            margin-top: 20px;
+            max-width: 390px;
 
-            color: #f3b5ce;
+            color: #79636d;
 
-            font-family: Arial, sans-serif;
+            font-size: 13px;
 
-            font-size: 11px;
+            line-height: 1.8;
+        }
+
+
+        /* =========================================================
+           CENTER STATEMENT
+        ========================================================= */
+
+        .statement-section {
+            padding: 130px 10%;
+
+            text-align: center;
+        }
+
+
+        .statement-small {
+            margin-bottom: 22px;
+
+            color: #b36a83;
+
+            font-size: 10px;
+
+            font-weight: 700;
 
             letter-spacing: 3px;
+
+            text-transform: uppercase;
         }
 
 
-        /* ---------- CTA ---------- */
+        .statement-section h2 {
+            max-width: 900px;
 
-        .about-note {
-            margin-top: 35px;
+            margin: auto;
 
-            padding: 40px;
-
-            border-radius: 30px;
-
-            background: linear-gradient(
-                135deg,
-                #f8d6e5,
-                #fff0f6
-            );
-
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            gap: 25px;
-        }
-
-
-        .about-note h2 {
-            margin: 8px 0 0;
-
-            color: #5b2942;
+            color: #4c2b3a;
 
             font-family: Georgia, serif;
 
-            font-weight: normal;
+            font-size: clamp(40px, 6vw, 72px);
 
-            font-size: 27px;
+            font-weight: 400;
+
+            line-height: 1.08;
+
+            letter-spacing: -2px;
         }
 
 
-        .about-button {
-            text-decoration: none;
+        .statement-section h2 em {
+            color: #bd6686;
 
-            background: #c65384;
+            font-style: italic;
+        }
 
-            color: white;
 
-            padding: 14px 25px;
+        .statement-line {
+            width: 55px;
+            height: 1px;
 
-            border-radius: 30px;
+            margin: 35px auto;
+
+            background: #c9879e;
+        }
+
+
+        .statement-section p {
+            max-width: 580px;
+
+            margin: auto;
+
+            color: #806974;
 
             font-size: 14px;
 
-            white-space: nowrap;
-
-            transition: .3s;
+            line-height: 1.9;
         }
 
 
-        .about-button:hover {
-            background: #a93b6b;
+        /* =========================================================
+           FINAL CTA
+        ========================================================= */
 
-            transform: translateY(-3px);
-        }
+        .final-section {
+            position: relative;
 
+            margin-bottom: 65px;
 
-        /* ---------- FOOTER ---------- */
+            padding: 90px 30px;
 
-        .about-footer {
+            overflow: hidden;
+
             text-align: center;
 
-            margin-top: 35px;
+            background: #4f2d3d;
 
-            color: #a27d8c;
-
-            font-size: 13px;
-        }
-
-        .about-footer b {
-            color: #d16a97;
+            border-radius: 4px;
         }
 
 
-        /* =========================================
-           RESPONSIVE DESIGN
-        ========================================= */
+        .final-section::before {
+            content: "";
 
-        /* ---------- TABLET ---------- */
+            position: absolute;
 
-        @media (max-width: 1000px) {
+            width: 400px;
+            height: 400px;
 
-            .about-content {
-                padding: 45px 25px 70px;
-            }
+            border: 1px solid rgba(255,255,255,.08);
 
-            .about-hero {
-                min-height: 440px;
-                padding: 60px 25px;
-            }
+            border-radius: 50%;
 
-            .about-hero h1 {
-                font-size: clamp(40px, 7vw, 60px);
-            }
+            left: -190px;
+            top: -210px;
+        }
 
-            .values {
-                grid-template-columns: repeat(2, 1fr);
-            }
 
-            .value-card:last-child {
-                grid-column: 1 / -1;
-                max-width: 500px;
-                width: 100%;
-                margin: 0 auto;
-            }
+        .final-section::after {
+            content: "";
 
-            .story {
+            position: absolute;
+
+            width: 300px;
+            height: 300px;
+
+            border: 1px solid rgba(255,255,255,.07);
+
+            border-radius: 50%;
+
+            right: -140px;
+            bottom: -180px;
+        }
+
+
+        .final-content {
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .final-small {
+            color: #d9aabc;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+        }
+
+
+        .final-section h2 {
+            max-width: 700px;
+
+            margin: 18px auto;
+
+            color: white;
+
+            font-family: Georgia, serif;
+
+            font-size: clamp(38px, 5vw, 57px);
+
+            font-weight: 400;
+
+            line-height: 1.08;
+        }
+
+
+        .final-section p {
+            max-width: 560px;
+
+            margin: auto;
+
+            color: #ead9df;
+
+            font-size: 14px;
+
+            line-height: 1.8;
+        }
+
+
+        .final-button {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 30px;
+
+            padding: 13px 27px;
+
+            background: #fff7fa;
+
+            color: #5b3044;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            letter-spacing: .4px;
+
+            transition: .3s ease;
+        }
+
+
+        .final-button:hover {
+            transform: translateY(-3px);
+
+            background: #f7dce7;
+
+            color: #4d2739;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .editorial-footer {
+            padding: 0 0 40px;
+
+            text-align: center;
+
+            color: #a58b96;
+
+            font-size: 11px;
+
+            letter-spacing: .5px;
+        }
+
+
+        .editorial-footer span {
+            color: #bc6b88;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .editorial-hero {
                 grid-template-columns: 1fr;
-            }
 
-            .story-image {
-                min-height: 300px;
-            }
+                text-align: center;
 
-            .story-text {
-                padding: 40px;
-            }
-
-        }
-
-
-        /* ---------- MOBILE NAVBAR ---------- */
-
-        @media (max-width: 850px) {
-
-            /* NAVBAR */
-
-            .about-page .topbar {
-                position: relative;
-
-                display: flex;
-                flex-direction: row;
-
-                align-items: center;
-                justify-content: space-between;
-
-                width: 100%;
-
-                padding: 12px 16px;
-
-                gap: 0;
+                padding-top: 60px;
             }
 
 
-            .about-page .logo {
-                display: flex;
-
-                align-items: center;
-
-                gap: 8px;
-
-                flex-shrink: 0;
-            }
-
-
-            .about-page .logo-mark {
-                width: 38px;
-                height: 38px;
-
-                object-fit: cover;
-
-                border-radius: 10px;
-
-                display: block;
-            }
-
-
-            .about-page .logo > span {
-                font-size: 20px;
-
-                white-space: nowrap;
-            }
-
-
-            /* HAMBURGER */
-
-            .mobile-about-toggle {
-                display: flex;
-
-                width: 42px;
-                height: 42px;
-
-                margin-left: auto;
-
-                padding: 0;
-
-                border: none;
-
-                background: transparent;
-
-                align-items: center;
+            .eyebrow {
                 justify-content: center;
-
-                flex-direction: column;
-
-                gap: 5px;
-
-                cursor: pointer;
-
-                z-index: 1002;
             }
 
 
-            .mobile-about-toggle span {
-                display: block;
-
-                width: 24px;
-                height: 2px;
-
-                background: #401c38;
-
-                border-radius: 5px;
-
-                transition:
-                    transform .25s ease,
-                    opacity .25s ease;
+            .hero-copy .hero-description {
+                margin-left: auto;
+                margin-right: auto;
             }
 
 
-            /* HAMBURGER -> X */
-
-            .mobile-about-toggle.menu-open span:nth-child(1) {
-                transform: translateY(7px) rotate(45deg);
-            }
-
-            .mobile-about-toggle.menu-open span:nth-child(2) {
-                opacity: 0;
-            }
-
-            .mobile-about-toggle.menu-open span:nth-child(3) {
-                transform: translateY(-7px) rotate(-45deg);
+            .hero-art {
+                min-height: 420px;
             }
 
 
-            /* MOBILE DROPDOWN */
-
-            .about-page .nav {
-                display: none;
-
-                position: absolute;
-
-                top: calc(100% + 8px);
-
-                right: 12px;
-
-                width: 225px;
-
-                padding: 8px;
-
-                flex-direction: column;
-
-                gap: 3px;
-
-                background: rgba(255,255,255,.98);
-
-                border: 1px solid #f0dce5;
-
-                border-radius: 16px;
-
-                box-shadow:
-                    0 18px 40px rgba(100,40,70,.14);
-
-                z-index: 1001;
-            }
-
-
-            .about-page .nav.about-mobile-open {
-                display: flex;
-            }
-
-
-            .about-page .nav a {
-                display: block;
-
-                width: 100%;
-
-                padding: 11px 13px;
-
-                border-radius: 10px;
-
-                font-size: 13px;
-
-                line-height: 1.2;
-
-                text-align: left;
-
-                white-space: nowrap;
-
-                text-decoration: none;
-            }
-
-
-            .about-page .nav a:hover {
-                background: #fff0f6;
-
-                color: #c64e86;
-            }
-
-
-            .about-page .nav a.active {
-                background: #fde5ef;
-
-                color: #c64e86;
-            }
-
-
-            .about-page .nav .logout {
-                margin-top: 4px;
-
-                background: #401c38;
-
-                color: white;
-
-                text-align: center;
-            }
-
-
-            .about-page .nav .logout:hover {
-                background: #542548;
-
-                color: white;
-            }
-
-
-            /* MAIN */
-
-            .about-content {
-                width: 100%;
-                padding: 30px 16px 55px;
-            }
-
-
-            /* HERO */
-
-            .about-hero {
-                min-height: 400px;
-                padding: 50px 20px;
-                border-radius: 30px;
-            }
-
-            .about-hero::before {
-                left: 10px;
-                top: 15px;
-                font-size: 55px;
-            }
-
-            .about-hero::after {
-                right: 10px;
-                bottom: 15px;
-                font-size: 60px;
-            }
-
-            .hero-content {
-                width: 100%;
-            }
-
-            .hero-small {
-                font-size: 10px;
-                letter-spacing: 2.5px;
-                margin-bottom: 15px;
-            }
-
-            .about-hero h1 {
-                font-size: clamp(36px, 11vw, 50px);
-                line-height: 1.1;
-            }
-
-            .hero-line {
-                width: 55px;
-                margin: 20px auto;
-            }
-
-            .about-hero p {
-                font-size: 15px;
-                line-height: 1.7;
-            }
-
-
-            /* INTRO */
-
-            .intro {
-                margin: 55px auto 35px;
-            }
-
-            .section-label {
-                font-size: 10px;
-                letter-spacing: 2px;
-            }
-
-            .intro h2 {
-                font-size: 30px;
-                line-height: 1.25;
-            }
-
-            .intro p {
-                font-size: 14px;
-                line-height: 1.7;
-            }
-
-
-            /* VALUES */
-
-            .values {
+            .story-section {
                 grid-template-columns: 1fr;
-                gap: 18px;
-            }
 
-            .value-card:last-child {
-                max-width: none;
-            }
+                gap: 45px;
 
-            .value-card {
-                padding: 30px 25px;
-                border-radius: 24px;
-            }
-
-            .value-icon {
-                width: 58px;
-                height: 58px;
-                font-size: 24px;
-                margin-bottom: 18px;
-            }
-
-            .value-card h3 {
-                font-size: 20px;
-            }
-
-            .value-card p {
-                font-size: 14px;
+                padding: 85px 8%;
             }
 
 
-            /* STORY */
-
-            .story {
-                grid-template-columns: 1fr;
-                gap: 18px;
-                margin-top: 50px;
-            }
-
-            .story-image {
-                min-height: 250px;
-                border-radius: 28px;
-            }
-
-            .story-flower {
-                font-size: 85px;
-            }
-
-            .story-image::before {
-                left: 20px;
-                top: 15px;
-                font-size: 55px;
-            }
-
-            .story-image::after {
-                right: 20px;
-                bottom: 10px;
-                font-size: 60px;
-            }
-
-            .story-text {
-                padding: 30px 25px;
-                border-radius: 28px;
-            }
-
-            .story-text h2 {
-                font-size: 30px;
-            }
-
-            .story-text p {
-                font-size: 14px;
-                line-height: 1.75;
+            .story-right {
+                padding-left: 25px;
             }
 
 
-            /* QUOTE */
-
-            .quote {
-                margin-top: 50px;
-                padding: 45px 22px;
-                border-radius: 28px;
-            }
-
-            .quote::before {
-                left: 5px;
-                top: -25px;
-                font-size: 130px;
-            }
-
-            .quote p {
-                font-size: 21px;
-                line-height: 1.45;
-            }
-
-            .quote span {
-                font-size: 10px;
-                letter-spacing: 2px;
-            }
-
-
-            /* CTA */
-
-            .about-note {
-                margin-top: 25px;
-                padding: 30px 22px;
-                border-radius: 25px;
-
+            .feature-heading {
                 flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
 
-            .about-note h2 {
-                font-size: 24px;
-                line-height: 1.3;
-            }
-
-            .about-button {
-                padding: 13px 22px;
-                font-size: 13px;
-            }
-
-
-            /* FOOTER */
-
-            .about-footer {
-                margin-top: 28px;
-                font-size: 12px;
-                line-height: 1.6;
-                padding: 0 10px;
+                align-items: flex-start;
             }
 
         }
 
 
-        /* ---------- SMALL PHONES ---------- */
+        @media (max-width: 650px) {
 
-        @media (max-width: 480px) {
-
-            /* NAVBAR */
-
-            .about-page .topbar {
-                padding: 10px 12px;
+            .editorial-page {
+                width: 94%;
             }
 
 
-            .about-page .logo-mark {
-                width: 34px;
-                height: 34px;
+            .editorial-hero {
+                min-height: auto;
 
-                border-radius: 9px;
+                padding: 55px 3% 65px;
+
+                gap: 40px;
             }
 
 
-            .about-page .logo > span {
-                font-size: 19px;
+            .hero-copy h1 {
+                font-size: 52px;
+
+                letter-spacing: -2px;
             }
 
 
-            .mobile-about-toggle {
-                width: 40px;
-                height: 40px;
+            .hero-art-main {
+                width: 265px;
+                height: 350px;
             }
 
 
-            .mobile-about-toggle span {
-                width: 23px;
+            .hero-note {
+                right: 0;
+
+                bottom: 15px;
+
+                width: 170px;
+
+                padding: 20px;
             }
 
 
-            .about-page .nav {
-                right: 10px;
-
-                width: 210px;
-
-                border-radius: 15px;
+            .hero-note strong {
+                font-size: 17px;
             }
 
 
-            .about-page .nav a {
-                font-size: 12px;
+            .hero-number {
+                left: 0;
 
-                padding: 11px 12px;
+                font-size: 60px;
             }
 
 
-            /* MAIN */
-
-            .about-content {
-                padding: 22px 12px 45px;
+            .editorial-intro {
+                padding: 75px 5%;
             }
 
 
-            /* HERO */
-
-            .about-hero {
-                min-height: 360px;
-                padding: 40px 16px;
-                border-radius: 24px;
+            .editorial-intro h2 {
+                font-size: 36px;
             }
 
-            .about-hero::before {
+
+            .story-section {
+                padding: 75px 7%;
+            }
+
+
+            .story-left h2 {
+                font-size: 40px;
+            }
+
+
+            .feature-section {
+                padding: 75px 6%;
+            }
+
+
+            .editorial-feature {
+                grid-template-columns: 40px 1fr;
+
+                gap: 12px;
+
+                padding: 25px 0;
+            }
+
+
+            .editorial-feature p {
+                grid-column: 2;
+
+                margin-top: -8px;
+            }
+
+
+            .statement-section {
+                padding: 85px 7%;
+            }
+
+
+            .statement-section h2 {
+                font-size: 42px;
+            }
+
+
+            .final-section {
+                margin-bottom: 40px;
+
+                padding: 70px 20px;
+            }
+
+
+            .final-section h2 {
+                font-size: 40px;
+            }
+
+        }
+
+
+        @media (max-width: 400px) {
+
+            .hero-copy h1 {
                 font-size: 45px;
-                left: 5px;
-                top: 10px;
-            }
-
-            .about-hero::after {
-                font-size: 50px;
-                right: 5px;
-                bottom: 10px;
-            }
-
-            .hero-small {
-                font-size: 9px;
-                letter-spacing: 2px;
-            }
-
-            .about-hero h1 {
-                font-size: 34px;
-            }
-
-            .about-hero p {
-                font-size: 14px;
             }
 
 
-            /* INTRO */
-
-            .intro {
-                margin: 45px auto 30px;
-            }
-
-            .intro h2 {
-                font-size: 27px;
+            .hero-art-main {
+                width: 240px;
+                height: 320px;
             }
 
 
-            /* CARDS */
-
-            .value-card {
-                padding: 27px 20px;
-                border-radius: 22px;
+            .hero-note {
+                width: 155px;
             }
 
 
-            /* STORY */
-
-            .story {
-                margin-top: 40px;
-            }
-
-            .story-image {
-                min-height: 220px;
-            }
-
-            .story-text {
-                padding: 27px 20px;
-            }
-
-            .story-text h2 {
-                font-size: 27px;
-            }
-
-
-            /* QUOTE */
-
-            .quote {
-                padding: 38px 18px;
-                border-radius: 24px;
-            }
-
-            .quote p {
-                font-size: 19px;
-            }
-
-
-            /* CTA */
-
-            .about-note {
-                padding: 27px 18px;
-            }
-
-            .about-note h2 {
-                font-size: 22px;
+            .statement-section h2 {
+                font-size: 36px;
             }
 
         }
@@ -1229,353 +1000,386 @@ session_start();
 
 <body class="about-page">
 
-<!-- ================= NAVBAR ================= -->
 
-<?php include "includes/nav.php"; ?>
+    <!-- =====================================================
+         EXISTING NAVBAR — DO NOT TOUCH
+    ====================================================== -->
+
+    <?php include "includes/nav.php"; ?>
+
+
+    <main class="editorial-page">
+
+
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
+
+        <section class="editorial-hero">
+
+
+            <div class="hero-copy">
+
+
+                <div class="eyebrow">
+                    About FemTrack
+                </div>
+
+
+                <h1>
+                    More than a
+                    <em>tracker.</em>
+                </h1>
+
+
+                <p class="hero-description">
+                    A gentle digital space designed to help you
+                    record your cycle, understand your symptoms,
+                    and keep your menstrual health information
+                    beautifully organised.
+                </p>
+
+
+                <div class="hero-small">
+                    Your cycle · Your rhythm · Your strength
+                </div>
+
+
+            </div>
 
 
 
-<main class="about-content">
+            <div class="hero-art">
 
 
-<!-- ================= HERO ================= -->
+                <div class="hero-number">
+                    01
+                </div>
 
-<section class="about-hero">
 
-    <div class="hero-content">
+                <div class="hero-art-main"></div>
 
-        <div class="hero-small">
-            ✦ ABOUT FEMTRACK ✦
+
+                <div class="hero-note">
+
+                    <small>
+                        FemTrack
+                    </small>
+
+                    <strong>
+                        A little space
+                        to understand
+                        yourself.
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             INTRO
+        ====================================================== -->
+
+        <section class="editorial-intro">
+
+
+            <div class="intro-kicker">
+                The idea behind FemTrack
+            </div>
+
+
+            <h2>
+                Your body has a rhythm.
+                <em>It deserves to be noticed.</em>
+            </h2>
+
+
+            <p>
+                FemTrack was created as a simple menstrual health
+                tracking system where users can keep their period
+                information, symptoms, history, and wellness
+                activities together in one place.
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             STORY
+        ====================================================== -->
+
+        <section class="story-section">
+
+
+            <div class="story-left">
+
+                <div class="story-label">
+                    Why we created it
+                </div>
+
+
+                <h2>
+                    Because keeping
+                    track should feel
+                    <em>simple.</em>
+                </h2>
+
+            </div>
+
+
+
+            <div class="story-right">
+
+                <p>
+                    Menstrual health is personal, and every cycle
+                    can feel a little different. Dates, symptoms,
+                    and experiences can easily become difficult
+                    to remember when they are scattered across
+                    different places.
+                </p>
+
+
+                <p>
+                    FemTrack brings these records into one organised
+                    digital space, making it easier to record
+                    information and look back at your own history.
+                </p>
+
+
+                <div class="story-signature">
+                    — The idea behind FemTrack
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             FEATURES
+        ====================================================== -->
+
+        <section class="feature-section">
+
+
+            <div class="feature-heading">
+
+
+                <h2>
+                    What's<br>
+                    inside.
+                </h2>
+
+
+                <p>
+                    Four simple parts of FemTrack designed around
+                    recording, reviewing, and caring for your
+                    menstrual health.
+                </p>
+
+
+            </div>
+
+
+
+            <div class="feature-list">
+
+
+                <div class="editorial-feature">
+
+                    <div class="feature-number">
+                        01
+                    </div>
+
+                    <h3>
+                        Period Log
+                    </h3>
+
+                    <p>
+                        Record your period information and keep
+                        your cycle history organised.
+                    </p>
+
+                </div>
+
+
+
+                <div class="editorial-feature">
+
+                    <div class="feature-number">
+                        02
+                    </div>
+
+                    <h3>
+                        Track Symptoms
+                    </h3>
+
+                    <p>
+                        Record symptoms throughout your cycle
+                        and keep your experiences together.
+                    </p>
+
+                </div>
+
+
+
+                <div class="editorial-feature">
+
+                    <div class="feature-number">
+                        03
+                    </div>
+
+                    <h3>
+                        Reports
+                    </h3>
+
+                    <p>
+                        Review the information you have recorded
+                        and look back at your menstrual history.
+                    </p>
+
+                </div>
+
+
+
+                <div class="editorial-feature">
+
+                    <div class="feature-number">
+                        04
+                    </div>
+
+                    <h3>
+                        Yoga & Exercise
+                    </h3>
+
+                    <p>
+                        Explore simple wellness activities that
+                        can become part of your self-care routine.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             BIG STATEMENT
+        ====================================================== -->
+
+        <section class="statement-section">
+
+
+            <div class="statement-small">
+                A reminder
+            </div>
+
+
+            <h2>
+                Your cycle changes.
+                <br>
+                <em>And that's okay.</em>
+            </h2>
+
+
+            <div class="statement-line"></div>
+
+
+            <p>
+                FemTrack is not about making every month look the
+                same. It is about giving you a simple place to
+                record what happens and become more aware of
+                your own patterns.
+            </p>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             FINAL CTA
+        ====================================================== -->
+
+        <section class="final-section">
+
+
+            <div class="final-content">
+
+
+                <div class="final-small">
+                    Welcome to FemTrack
+                </div>
+
+
+                <h2>
+                    Know your rhythm.
+                    Own your story.
+                </h2>
+
+
+                <p>
+                    Keep your menstrual health information
+                    organised in one thoughtful space.
+                </p>
+
+
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+
+                    <a
+                        href="user/dashboard.php"
+                        class="final-button"
+                    >
+                        Go to Dashboard →
+                    </a>
+
+                <?php else: ?>
+
+                    <a
+                        href="login.php"
+                        class="final-button"
+                    >
+                        Get Started →
+                    </a>
+
+                <?php endif; ?>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <div class="editorial-footer">
+
+            FemTrack —
+            <span>Your Cycle, Your Strength.</span>
+
         </div>
 
-        <h1>
-            A little more care
-            for <em>you.</em>
-        </h1>
 
-        <div class="hero-line"></div>
-
-        <p>
-            FemTrack is a gentle digital space created to make
-            period and cycle tracking feel simple, comfortable,
-            and personal.
-        </p>
-
-    </div>
-
-</section>
-
-
-<!-- ================= INTRO ================= -->
-
-<section class="intro">
-
-    <div class="section-label">
-        Our little philosophy
-    </div>
-
-    <h2>
-        Because your body deserves
-        <span>your attention.</span>
-    </h2>
-
-    <p>
-        Understanding your cycle doesn't have to be complicated.
-        FemTrack gives you a simple place to record your periods,
-        track symptoms, and look back at your own patterns.
-    </p>
-
-</section>
-
-
-<!-- ================= VALUES ================= -->
-
-<section class="values">
-
-
-    <article class="value-card">
-
-        <div class="value-icon">
-            ♡
-        </div>
-
-        <h3>
-            Made for You
-        </h3>
-
-        <p>
-            Your cycle is personal. FemTrack keeps your records
-            organised in a space designed around your everyday needs.
-        </p>
-
-    </article>
-
-
-    <article class="value-card">
-
-        <div class="value-icon">
-            ✿
-        </div>
-
-        <h3>
-            Simple & Gentle
-        </h3>
-
-        <p>
-            No overwhelming screens or complicated steps.
-            Just simple tools to help you keep track of yourself.
-        </p>
-
-    </article>
-
-
-    <article class="value-card">
-
-        <div class="value-icon">
-            ✦
-        </div>
-
-        <h3>
-            Understand Your Patterns
-        </h3>
-
-        <p>
-            Keep your history together and use your records
-            to notice patterns and feel more prepared.
-        </p>
-
-    </article>
-
-
-</section>
-
-
-<!-- ================= STORY ================= -->
-
-<section class="story">
-
-
-    <div class="story-image">
-
-        <div class="story-flower">
-            🌷
-        </div>
-
-    </div>
-
-
-    <div class="story-text">
-
-        <div class="section-label">
-            Why FemTrack exists
-        </div>
-
-        <h2>
-            Tracking shouldn't feel like
-            <span>another task.</span>
-        </h2>
-
-        <p>
-            Period tracking is something many women do every month,
-            yet it can easily become confusing when dates, symptoms,
-            and previous records are scattered everywhere.
-        </p>
-
-        <p>
-            FemTrack brings those little pieces together into one
-            calm and easy-to-use space — so you can spend less time
-            worrying about remembering everything and more time
-            understanding yourself.
-        </p>
-
-    </div>
-
-</section>
-
-
-<!-- ================= QUOTE ================= -->
-
-<section class="quote">
-
-    <p>
-        Your body is not something to figure out.
-        It is something to listen to.
-    </p>
-
-    <span>
-        FEMTRACK
-    </span>
-
-</section>
-
-
-<!-- ================= CTA ================= -->
-
-<section class="about-note">
-
-    <div>
-
-        <div class="section-label">
-            Ready when you are ♡
-        </div>
-
-        <h2>
-            Take a moment for yourself today.
-        </h2>
-
-    </div>
-
-
-    <?php if (isset($_SESSION['user_id'])): ?>
-
-        <a
-            class="about-button"
-            href="user/dashboard.php"
-        >
-            Go to Dashboard →
-        </a>
-
-    <?php else: ?>
-
-        <a
-            class="about-button"
-            href="login.php"
-        >
-            Get Started →
-        </a>
-
-    <?php endif; ?>
-
-</section>
-
-
-<div class="about-footer">
-
-    ~Made with <b>♡</b> for women who deserve
-    a little more care.~
-
-</div>
-
-
-</main>
-
-
-<!-- ================= MOBILE NAV SCRIPT ================= -->
-
-<script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    const menuButton = document.getElementById("aboutMobileNavToggle");
-    const navigation = document.getElementById("aboutMobileNav");
-
-    if (!menuButton || !navigation) {
-        return;
-    }
-
-
-    /* OPEN / CLOSE MENU */
-
-    menuButton.addEventListener("click", function () {
-
-        const isOpen =
-            navigation.classList.toggle("about-mobile-open");
-
-        menuButton.classList.toggle("menu-open", isOpen);
-
-        menuButton.setAttribute(
-            "aria-expanded",
-            isOpen ? "true" : "false"
-        );
-
-        menuButton.setAttribute(
-            "aria-label",
-            isOpen ? "Close navigation menu" : "Open navigation menu"
-        );
-
-    });
-
-
-    /* CLOSE MENU AFTER CLICKING A LINK */
-
-    navigation.querySelectorAll("a").forEach(function (link) {
-
-        link.addEventListener("click", function () {
-
-            navigation.classList.remove("about-mobile-open");
-
-            menuButton.classList.remove("menu-open");
-
-            menuButton.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-
-            menuButton.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
-
-        });
-
-    });
-
-
-    /* CLOSE MENU WHEN CLICKING OUTSIDE */
-
-    document.addEventListener("click", function (event) {
-
-        if (
-            !navigation.contains(event.target) &&
-            !menuButton.contains(event.target)
-        ) {
-
-            navigation.classList.remove("about-mobile-open");
-
-            menuButton.classList.remove("menu-open");
-
-            menuButton.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-
-            menuButton.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
-
-        }
-
-    });
-
-
-    /* RESET MOBILE MENU WHEN RETURNING TO DESKTOP */
-
-    window.addEventListener("resize", function () {
-
-        if (window.innerWidth > 850) {
-
-            navigation.classList.remove("about-mobile-open");
-
-            menuButton.classList.remove("menu-open");
-
-            menuButton.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-
-            menuButton.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
-
-        }
-
-    });
-
-});
-
-</script>
+    </main>
 
 
 </body>
