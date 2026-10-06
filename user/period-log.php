@@ -1,3 +1,4 @@
+```php
 <?php
 
 session_start();
@@ -12,13 +13,24 @@ require_once __DIR__ . "/../config/database.php";
 */
 
 if (!isset($_SESSION["user_id"])) {
+
     header("Location: ../login.php");
     exit;
+
 }
 
 $user_id = $_SESSION["user_id"];
 
 $message = "";
+
+
+/*
+|--------------------------------------------------------------------------
+| TODAY'S DATE
+|--------------------------------------------------------------------------
+*/
+
+$today = date("Y-m-d");
 
 
 /*
@@ -33,6 +45,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $end_date = $_POST["end_date"] ?? "";
     $flow_intensity = $_POST["flow_intensity"] ?? "";
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK EMPTY FIELDS
+    |--------------------------------------------------------------------------
+    */
+
     if (
         empty($start_date) ||
         empty($end_date) ||
@@ -41,19 +60,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $message = "Please fill in all fields.";
 
-    } elseif ($start_date > date("Y-m-d")) {
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK FUTURE START DATE
+    |--------------------------------------------------------------------------
+    */
+
+    elseif ($start_date > $today) {
 
         $message = "Period start date cannot be in the future.";
 
-    } elseif ($end_date > date("Y-m-d")) {
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK FUTURE END DATE
+    |--------------------------------------------------------------------------
+    */
+
+    elseif ($end_date > $today) {
 
         $message = "Period end date cannot be in the future.";
 
-    } elseif ($end_date < $start_date) {
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK DATE ORDER
+    |--------------------------------------------------------------------------
+    */
+
+    elseif ($end_date < $start_date) {
 
         $message = "End date cannot be before start date.";
 
-    } else {
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SAVE TO DATABASE
+    |--------------------------------------------------------------------------
+    */
+
+    else {
 
         $stmt = mysqli_prepare(
             $conn,
@@ -62,27 +117,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             VALUES (?, ?, ?, ?)"
         );
 
-        mysqli_stmt_bind_param(
-            $stmt,
-            "isss",
-            $user_id,
-            $start_date,
-            $end_date,
-            $flow_intensity
-        );
 
-        if (mysqli_stmt_execute($stmt)) {
+        if ($stmt) {
 
-            $message = "Period information saved successfully! 🌸";
+            mysqli_stmt_bind_param(
+                $stmt,
+                "isss",
+                $user_id,
+                $start_date,
+                $end_date,
+                $flow_intensity
+            );
+
+
+            if (mysqli_stmt_execute($stmt)) {
+
+                $message =
+                    "Period information saved successfully! 🌸";
+
+            } else {
+
+                $message =
+                    "Something went wrong. Please try again.";
+
+            }
+
+
+            mysqli_stmt_close($stmt);
 
         } else {
 
-            $message = "Something went wrong. Please try again.";
+            $message =
+                "Unable to save period information.";
 
         }
 
-        mysqli_stmt_close($stmt);
     }
+
 }
 
 ?>
@@ -100,6 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     >
 
     <title>Period Log | FemTrack</title>
+
 
     <link
         rel="stylesheet"
@@ -225,7 +297,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             border: 1px solid #ffd2e2;
 
-            color: #d52d79;
+            color: #cd588c;
 
             font-size: 10px;
 
@@ -276,7 +348,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             border-radius: 14px;
 
-            color: #b52f64;
+            color: #3e061d;
 
             font-size: 13px;
 
@@ -368,7 +440,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             background:
                 linear-gradient(
                     90deg,
-                    #d73b80,
+                    #c24e82,
                     #ef5f9a
                 );
 
@@ -542,6 +614,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             .period-page {
                 padding: 45px 20px 65px;
             }
+
 
             .content-card {
                 max-width: 680px;
@@ -863,21 +936,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <section class="content-card">
 
+
         <div class="form-header">
 
             <div class="eyebrow">
                 ♡ NEW RECORD
             </div>
 
+
             <h1>
                 Log Your Period
             </h1>
+
 
             <p class="lead">
                 Keep track of your cycle and predict your next period.
             </p>
 
         </div>
+
 
 
         <?php if (!empty($message)): ?>
@@ -893,6 +970,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
 
+
         <form
             method="POST"
             class="form-stack"
@@ -901,39 +979,50 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         >
 
 
+            <!-- START DATE -->
+
             <label>
 
                 Period Start Date
+
 
                 <input
                     type="date"
                     name="start_date"
                     id="start_date"
-                    max="<?php echo date('Y-m-d'); ?>"
+                    max="<?php echo htmlspecialchars($today); ?>"
                     required
                 >
 
             </label>
 
+
+
+            <!-- END DATE -->
 
             <label>
 
                 Period End Date
 
+
                 <input
                     type="date"
                     name="end_date"
                     id="end_date"
-                    max="<?php echo date('Y-m-d'); ?>"
+                    max="<?php echo htmlspecialchars($today); ?>"
                     required
                 >
 
             </label>
 
 
+
+            <!-- FLOW -->
+
             <label>
 
                 Flow Intensity
+
 
                 <select
                     name="flow_intensity"
@@ -944,13 +1033,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         Select flow
                     </option>
 
+
                     <option value="light">
                         Light
                     </option>
 
+
                     <option value="medium">
                         Medium
                     </option>
+
 
                     <option value="heavy">
                         Heavy
@@ -961,45 +1053,99 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </label>
 
 
+
+            <!-- CYCLE LENGTH -->
+
             <label>
 
                 Your Cycle Length
 
+
                 <select id="cycle_length">
 
-                    <option value="21">21 days</option>
-                    <option value="22">22 days</option>
-                    <option value="23">23 days</option>
-                    <option value="24">24 days</option>
-                    <option value="25">25 days</option>
-                    <option value="26">26 days</option>
-                    <option value="27">27 days</option>
+                    <option value="21">
+                        21 days
+                    </option>
+
+                    <option value="22">
+                        22 days
+                    </option>
+
+                    <option value="23">
+                        23 days
+                    </option>
+
+                    <option value="24">
+                        24 days
+                    </option>
+
+                    <option value="25">
+                        25 days
+                    </option>
+
+                    <option value="26">
+                        26 days
+                    </option>
+
+                    <option value="27">
+                        27 days
+                    </option>
+
 
                     <option value="28" selected>
                         28 days
                     </option>
 
-                    <option value="29">29 days</option>
-                    <option value="30">30 days</option>
-                    <option value="31">31 days</option>
-                    <option value="32">32 days</option>
-                    <option value="33">33 days</option>
-                    <option value="34">34 days</option>
-                    <option value="35">35 days</option>
+
+                    <option value="29">
+                        29 days
+                    </option>
+
+                    <option value="30">
+                        30 days
+                    </option>
+
+                    <option value="31">
+                        31 days
+                    </option>
+
+                    <option value="32">
+                        32 days
+                    </option>
+
+                    <option value="33">
+                        33 days
+                    </option>
+
+                    <option value="34">
+                        34 days
+                    </option>
+
+                    <option value="35">
+                        35 days
+                    </option>
 
                 </select>
 
             </label>
 
 
+
+            <!-- PREDICT -->
+
             <button
                 type="button"
                 class="predict-button"
                 onclick="predictPeriod()"
             >
+
                 🌸 Predict Next Period
+
             </button>
 
+
+
+            <!-- PREDICTION -->
 
             <div
                 class="prediction-box"
@@ -1010,10 +1156,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     🌸 Your Next Period
                 </h2>
 
+
                 <div
                     class="prediction-date"
                     id="predictionDate"
                 ></div>
+
 
                 <div class="prediction-note">
 
@@ -1025,20 +1173,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
 
 
+
+            <!-- ACTIONS -->
+
             <div class="actions">
+
 
                 <button
                     class="button"
                     type="submit"
                 >
+
                     Save Period 🌸
+
                 </button>
+
 
                 <a
                     class="button secondary"
                     href="dashboard.php"
                 >
+
                     Back to Dashboard
+
                 </a>
 
             </div>
@@ -1052,40 +1209,51 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
 
+```html
 <script>
-
 
 /*
 |--------------------------------------------------------------------------
-| DATE RESTRICTIONS
+| GET ELEMENTS
 |--------------------------------------------------------------------------
 */
 
-const startDateInput =
-    document.getElementById("start_date");
-
-const endDateInput =
-    document.getElementById("end_date");
+const startDateInput = document.getElementById("start_date");
+const endDateInput = document.getElementById("end_date");
+const predictionBox = document.getElementById("predictionBox");
+const predictionDate = document.getElementById("predictionDate");
 
 
 /*
 |--------------------------------------------------------------------------
-| WHEN START DATE CHANGES
+| TODAY
 |--------------------------------------------------------------------------
-| End date cannot be before start date.
+*/
+
+const today = "<?php echo $today; ?>";
+
+
+/*
+|--------------------------------------------------------------------------
+| START DATE CHANGE
+|--------------------------------------------------------------------------
+|
+| Only control the minimum allowed end date here.
+| No alert is shown here.
+|
 */
 
 startDateInput.addEventListener("change", function () {
 
-    const startDate = this.value;
+    const startDate = startDateInput.value;
 
     if (startDate) {
 
         endDateInput.min = startDate;
 
         /*
-        | If an already selected end date is invalid,
-        | clear it.
+        | If an existing end date is now invalid,
+        | clear it silently.
         */
 
         if (
@@ -1095,10 +1263,13 @@ startDateInput.addEventListener("change", function () {
 
             endDateInput.value = "";
 
-            document.getElementById(
-                "predictionBox"
-            ).style.display = "none";
+            predictionBox.style.display = "none";
         }
+
+    } else {
+
+        endDateInput.removeAttribute("min");
+
     }
 
 });
@@ -1106,71 +1277,134 @@ startDateInput.addEventListener("change", function () {
 
 /*
 |--------------------------------------------------------------------------
-| WHEN END DATE CHANGES
+| VALIDATE PERIOD DATES
 |--------------------------------------------------------------------------
 */
 
-endDateInput.addEventListener("change", function () {
+function validatePeriodDates() {
 
-    const startDate = startDateInput.value;
-    const endDate = this.value;
+    const startDate = startDateInput.value.trim();
+    const endDate = endDateInput.value.trim();
 
-    if (
-        startDate &&
-        endDate &&
-        endDate < startDate
-    ) {
 
-        alert(
-            "End date cannot be before the period start date. 🌸"
-        );
+    /*
+    |--------------------------------------------------------------------------
+    | EMPTY DATE
+    |--------------------------------------------------------------------------
+    */
 
-        this.value = "";
+    if (startDate === "" || endDate === "") {
 
-        document.getElementById(
-            "predictionBox"
-        ).style.display = "none";
+        return {
+            valid: false,
+            message: "Please select both period start and end dates. 🌸"
+        };
+
     }
 
-});
+
+    /*
+    |--------------------------------------------------------------------------
+    | FUTURE DATE
+    |--------------------------------------------------------------------------
+    */
+
+    if (startDate > today) {
+
+        return {
+            valid: false,
+            message: "Period start date cannot be in the future. 🌸"
+        };
+
+    }
+
+
+    if (endDate > today) {
+
+        return {
+            valid: false,
+            message: "Period end date cannot be in the future. 🌸"
+        };
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATE ORDER
+    |--------------------------------------------------------------------------
+    */
+
+    const startParts = startDate.split("-");
+    const endParts = endDate.split("-");
+
+
+    const start = new Date(
+        Number(startParts[0]),
+        Number(startParts[1]) - 1,
+        Number(startParts[2])
+    );
+
+
+    const end = new Date(
+        Number(endParts[0]),
+        Number(endParts[1]) - 1,
+        Number(endParts[2])
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK END DATE BEFORE START DATE
+    |--------------------------------------------------------------------------
+    */
+
+    if (end.getTime() < start.getTime()) {
+
+        return {
+            valid: false,
+            message: "End date cannot be before the period start date. 🌸"
+        };
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALID
+    |--------------------------------------------------------------------------
+    */
+
+    return {
+        valid: true,
+        message: ""
+    };
+
+}
 
 
 /*
 |--------------------------------------------------------------------------
-| FORM VALIDATION BEFORE SAVING
+| FORM VALIDATION
 |--------------------------------------------------------------------------
 */
 
 function validatePeriodForm() {
 
-    const startDate =
-        startDateInput.value;
-
-    const endDate =
-        endDateInput.value;
+    const result = validatePeriodDates();
 
 
-    if (!startDate || !endDate) {
+    if (!result.valid) {
 
-        alert(
-            "Please select both period start and end dates. 🌸"
-        );
+        alert(result.message);
 
         return false;
-    }
 
-
-    if (endDate < startDate) {
-
-        alert(
-            "End date cannot be before the start date. 🌸"
-        );
-
-        return false;
     }
 
 
     return true;
+
 }
 
 
@@ -1182,82 +1416,23 @@ function validatePeriodForm() {
 
 function predictPeriod() {
 
-    const startDate =
-        startDateInput.value;
-
-    const endDate =
-        endDateInput.value;
-
-
     /*
     |--------------------------------------------------------------------------
-    | CHECK START DATE
+    | VALIDATE DATES FIRST
     |--------------------------------------------------------------------------
     */
 
-    if (!startDate) {
-
-        alert(
-            "Please select your period start date. 🌸"
-        );
-
-        return;
-    }
+    const result = validatePeriodDates();
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | CHECK END DATE
-    |--------------------------------------------------------------------------
-    */
+    if (!result.valid) {
 
-    if (!endDate) {
+        alert(result.message);
 
-        alert(
-            "Please select your period end date. 🌸"
-        );
+        predictionBox.style.display = "none";
 
         return;
-    }
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | CHECK DATE ORDER
-    |--------------------------------------------------------------------------
-    */
-
-    if (endDate < startDate) {
-
-        alert(
-            "End date cannot be before the start date. 🌸"
-        );
-
-        document.getElementById(
-            "predictionBox"
-        ).style.display = "none";
-
-        return;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | CHECK FUTURE DATE
-    |--------------------------------------------------------------------------
-    */
-
-    const today =
-        new Date().toISOString().split("T")[0];
-
-
-    if (startDate > today || endDate > today) {
-
-        alert(
-            "Period dates cannot be in the future. 🌸"
-        );
-
-        return;
     }
 
 
@@ -1267,39 +1442,49 @@ function predictPeriod() {
     |--------------------------------------------------------------------------
     */
 
-    const cycleLength =
-        parseInt(
-            document.getElementById(
-                "cycle_length"
-            ).value
-        );
+    const cycleLength = parseInt(
+        document.getElementById("cycle_length").value,
+        10
+    );
 
 
     /*
     |--------------------------------------------------------------------------
-    | CALCULATE PREDICTION
+    | CREATE DATE
     |--------------------------------------------------------------------------
     */
 
-    const date =
-        new Date(
-            startDate + "T00:00:00"
-        );
+    const parts = startDateInput.value.split("-");
 
+
+    const date = new Date(
+        Number(parts[0]),
+        Number(parts[1]) - 1,
+        Number(parts[2])
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADD CYCLE LENGTH
+    |--------------------------------------------------------------------------
+    */
 
     date.setDate(
         date.getDate() + cycleLength
     );
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | FORMAT DATE
+    |--------------------------------------------------------------------------
+    */
+
     const options = {
-
         year: "numeric",
-
         month: "long",
-
         day: "numeric"
-
     };
 
 
@@ -1316,22 +1501,21 @@ function predictPeriod() {
     |--------------------------------------------------------------------------
     */
 
-    document.getElementById(
-        "predictionDate"
-    ).textContent =
+    predictionDate.textContent =
         predictedDate;
 
 
-    document.getElementById(
-        "predictionBox"
-    ).style.display =
+    predictionBox.style.display =
         "block";
 
 }
 
 </script>
+```
+
 
 
 </body>
 
 </html>
+```

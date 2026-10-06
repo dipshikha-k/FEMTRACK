@@ -555,7 +555,7 @@ session_start();
 
             color: #79636d;
 
-            font-size: 13px;
+            font-size: 18px;
 
             line-height: 1.8;
         }
